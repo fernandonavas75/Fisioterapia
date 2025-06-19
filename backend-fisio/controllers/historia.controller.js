@@ -1,4 +1,4 @@
-const historiaService = require('../services/historia.service');
+const historiaService = require('../services/historia.services');
 
 exports.obtenerTodas = async (req, res) => {
   try {

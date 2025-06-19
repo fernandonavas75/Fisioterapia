@@ -1,4 +1,4 @@
-const service = require('../services/fuerzaMuscular.service');
+const service = require('../services/fuerzaMuscular');
 
 exports.obtenerTodos = async (req, res) => {
   try {

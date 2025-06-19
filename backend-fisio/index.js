@@ -2,14 +2,21 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const sequelize = require('./config/database');
-const Paciente = require('./models/Paciente');
-const HistoriaClinica = require('./models/HistoriaClinica');
-const Antecedentes = require('./models/Antecedentes');
-const EvaluacionPostural = require('./models/EvaluacionPostural');
-const FuerzaMuscular = require('./models/FuerzaMuscular');
-const PruebasEspecificas = require('./models/PruebasEspecificas');
-const Seguimiento = require('./models/Seguimiento');
-const FirmasConsentimientos = require('./models/FirmasConsentimientos');
+
+
+const {
+  Usuario,
+  Paciente,
+  HistoriaClinica,
+  Antecedentes,
+  EvaluacionPostural,
+  FuerzaMuscular,
+  PruebasEspecificas,
+  Seguimiento,
+  InformeFinal,
+  FirmasConsentimientos
+} = require('./models/associations');
+
 
 
 app.use(express.json());
@@ -42,7 +49,7 @@ app.use('/api/firmas', firmasRoutes);
 app.get('/', (req, res) => {
   res.send('API de fisioterapia funcionando');
 });
-
+/*
 sequelize.authenticate()
   .then(() => console.log('✅ Conexión con PostgreSQL exitosa'))
   // Importar modelos
@@ -57,3 +64,15 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+*/
+sequelize.authenticate()
+  .then(() => {
+    console.log('✅ Conexión con PostgreSQL exitosa');
+    return sequelize.sync({ alter: true });
+  })
+  .then(() => {
+    console.log('📄 Modelos sincronizados con la base de datos');
+  })
+  .catch(err => {
+    console.error('❌ Error al conectar o sincronizar:', err);
+  });
