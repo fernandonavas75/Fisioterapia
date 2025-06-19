@@ -12,6 +12,9 @@ Este proyecto es un backend desarrollado con **Node.js**, **Express**, **Sequeli
 - **Sequelize** (ORM)
 - **PostgreSQL** (Base de Datos relacional)
 - **dotenv** (Variables de entorno)
+- **JWT_SECRET=clave_super_segura**
+- **JWT_EXPIRES_IN=1d**
+
 - Arquitectura por módulos: `models`, `routes`, `controllers`, `services`, `config`
 
 ---
@@ -70,8 +73,38 @@ PUT /api/<modulo>/:id
 DELETE /api/<modulo>/:id
 
 
- Futuras mejoras
+
 Autenticación con JWT
+
+---
+
+##  Autenticación y autorización
+
+Este backend utiliza **JWT (JSON Web Tokens)** para gestionar sesiones de usuario y proteger rutas.
+
+### 📌 Endpoints de autenticación
+
+- `POST /api/auth/login` – Recibe `{ correo, contrasena }` y devuelve un `token` JWT y datos del usuario.
+
+###  Middleware `verifyToken`
+
+Protege rutas asegurándose de que el usuario esté autenticado. Se debe enviar el token en el header:
+
+
+### 🧑‍💼 Middleware `verifyRole`
+
+Permite limitar el acceso a ciertos roles (`admin`, `estudiante`, etc.). Se usa junto con `verifyToken`.
+
+### 📌 Ejemplo de uso en rutas:
+
+```js
+const verifyToken = require('../middlewares/verifyToken');
+const verifyRole = require('../middlewares/verifyRole');
+
+router.get('/', verifyToken, controller.obtenerTodos); // Solo usuarios logueados
+router.post('/', verifyToken, verifyRole(['admin']), controller.crear); // Solo admin
+
+ Futuras mejoras
 
 Validaciones con Joi o express-validator
 
