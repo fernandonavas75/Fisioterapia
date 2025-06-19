@@ -104,6 +104,100 @@ const verifyRole = require('../middlewares/verifyRole');
 router.get('/', verifyToken, controller.obtenerTodos); // Solo usuarios logueados
 router.post('/', verifyToken, verifyRole(['admin']), controller.crear); // Solo admin
 
+
+
+**Mejoras Actuales**
+
+# 🧠 Proyecto Fisioterapia - Sistema de Autenticación
+
+Este proyecto implementa un sistema completo de autenticación de usuarios con backend en **Node.js**, base de datos **PostgreSQL**, y frontend en **React.js**. La interfaz fue diseñada con un estilo moderno inspirado en la PUCE.
+
+---
+
+## 📁 Estructura General
+
+backend-fisio/
+├── models/
+├── routes/
+├── controllers/
+├── config/
+├── index.js
+├── .env
+└── ...
+frontend/
+├── src/
+│ ├── components/
+│ │ └── LoginForm.jsx
+│ │ └── LoginForm.module.css
+│ ├── App.jsx
+│ └── main.jsx
+└── ...
+
+
+---
+
+## 🔐 Backend - Autenticación
+
+### Tecnologías:
+
+- Node.js + Express
+- PostgreSQL + Sequelize ORM
+- JWT (token de sesión)
+- bcryptjs (encriptación de contraseñas)
+- dotenv para variables de entorno
+
+### Endpoints disponibles:
+
+| Método | Ruta                  | Descripción                      |
+|--------|-----------------------|----------------------------------|
+| POST   | `/api/auth/register`  | Registro de nuevo usuario        |
+| POST   | `/api/auth/login`     | Login de usuario con JWT         |
+
+### Cambios importantes:
+
+- Se agregó protección con **bcryptjs** para las contraseñas.
+- Se generó el `JWT_SECRET` en el archivo `.env`.
+- Se agregó middleware `auth.routes.js` para manejar login y registro.
+- Se incluyó `cors()` para permitir conexiones frontend-backend.
+- Se corrigieron errores de rutas y se probó exitosamente con **Postman**.
+
+---
+
+## 💻 Frontend - React
+
+### Tecnologías:
+
+- React con Vite
+- CSS Modules para estilos locales
+- Axios para peticiones HTTP
+
+### Mejoras implementadas:
+
+- 🧾 **Formulario de login funcional** conectado con el backend.
+- 🎨 Diseño **moderno, centrado, responsive**.
+- 👁️ Botón para **mostrar/ocultar contraseña**.
+- ✅ Validación de campos requeridos.
+- 📦 Gestión de `localStorage` para guardar el token y usuario.
+
+### Estilos:
+
+- Se diseñó una UI personalizada inspirada en **colores institucionales**.
+- Los elementos están **centrados vertical y horizontalmente** en todos los dispositivos.
+- Se descartó el uso de Tailwind CSS por simplicidad.
+
+---
+
+## ⚙️ Variables de entorno (.env)
+
+```env
+PORT=3000
+DB_NAME=tu_base_de_datos
+DB_USER=tu_usuario
+DB_PASSWORD=tu_password
+DB_HOST=localhost
+JWT_SECRET=12345
+JWT_EXPIRES_IN=1d
+
  Futuras mejoras
 
 Validaciones con Joi o express-validator
@@ -113,3 +207,17 @@ Paginación y filtrado de registros
 Documentación con Swagger
 
 Tests unitarios
+
+Próximos pasos
+Implementar rutas protegidas según el rol del usuario.
+
+Crear los dashboards para admin y estudiante.
+
+Incluir más formularios del sistema clínico (historial, evaluaciones, etc.).
+
+📌 Recomendaciones
+Usar npm run dev en ambos proyectos para desarrollo local.
+
+Asegúrate de que el backend esté corriendo antes de intentar loguearte.
+
+Verifica que el frontend esté enviando correctamente las peticiones (proxy o CORS).
