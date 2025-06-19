@@ -1,9 +1,15 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 require('dotenv').config();
 const sequelize = require('./config/database');
+const PORT = process.env.PORT || 3000;
 
+// 👇 Middleware primero, antes de las rutas
+app.use(cors()); // Permite peticiones desde el frontend (localhost:5173 en desarrollo)
+app.use(express.json());
 
+// Modelos
 const {
   Usuario,
   Paciente,
@@ -17,54 +23,24 @@ const {
   FirmasConsentimientos
 } = require('./models/associations');
 
-
-
-app.use(express.json());
-
-// Importar rutas
-const usuarioRoutes = require('./routes/usuario.routes');
-app.use('/api/usuarios', usuarioRoutes);
-const pacienteRoutes = require('./routes/paciente.routes');
-app.use('/api/pacientes', pacienteRoutes);
-const historiaRoutes = require('./routes/historia.routes');
-app.use('/api/historias', historiaRoutes);
-const antecedentesRoutes = require('./routes/antecedentes.routes');
-app.use('/api/antecedentes', antecedentesRoutes);
-const evalPosturalRoutes = require('./routes/evaluacionPostural.routes');
-app.use('/api/evaluacion-postural', evalPosturalRoutes);
-const fuerzaMuscularRoutes = require('./routes/fuerzaMuscular.routes');
-app.use('/api/fuerza-muscular', fuerzaMuscularRoutes);
-const pruebasEspecificasRoutes = require('./routes/pruebasEspecificas.routes');
-app.use('/api/pruebas-especificas', pruebasEspecificasRoutes);
-const seguimientoRoutes = require('./routes/seguimiento.routes');
-app.use('/api/seguimientos', seguimientoRoutes);
-const informeFinalRoutes = require('./routes/informeFinal.routes');
-app.use('/api/informes-finales', informeFinalRoutes);
-const firmasRoutes = require('./routes/firmasConsentimientos.routes');
-app.use('/api/firmas', firmasRoutes);
-
-
-// app.use('/api/usuarios', require('./routes/usuario.routes'));  ← luego lo agregamos
+// Rutas
+app.use('/api/usuarios', require('./routes/usuario.routes'));
+app.use('/api/pacientes', require('./routes/paciente.routes'));
+app.use('/api/historias', require('./routes/historia.routes'));
+app.use('/api/antecedentes', require('./routes/antecedentes.routes'));
+app.use('/api/evaluacion-postural', require('./routes/evaluacionPostural.routes'));
+app.use('/api/fuerza-muscular', require('./routes/fuerzaMuscular.routes'));
+app.use('/api/pruebas-especificas', require('./routes/pruebasEspecificas.routes'));
+app.use('/api/seguimientos', require('./routes/seguimiento.routes'));
+app.use('/api/informes-finales', require('./routes/informeFinal.routes'));
+app.use('/api/firmas', require('./routes/firmasConsentimientos.routes'));
+app.use('/api/auth', require('./routes/auth.routes'));
 
 app.get('/', (req, res) => {
   res.send('API de fisioterapia funcionando');
 });
-/*
-sequelize.authenticate()
-  .then(() => console.log('✅ Conexión con PostgreSQL exitosa'))
-  // Importar modelos
-    const Usuario = require('./models/Usuario');
 
-    // Sincronizar modelos con la base de datos
-    sequelize.sync({ alter: true }) // También puedes usar { force: true } si deseas reiniciar las tablas
-  .then(() => console.log('📄 Modelos sincronizados con la base de datos'))
-  .catch(err => console.error('❌ Error al sincronizar modelos:', err));
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
-*/
+// Conexión y sincronización
 sequelize.authenticate()
   .then(() => {
     console.log('✅ Conexión con PostgreSQL exitosa');
@@ -72,6 +48,9 @@ sequelize.authenticate()
   })
   .then(() => {
     console.log('📄 Modelos sincronizados con la base de datos');
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+    });
   })
   .catch(err => {
     console.error('❌ Error al conectar o sincronizar:', err);
