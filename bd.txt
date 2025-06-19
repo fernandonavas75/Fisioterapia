@@ -1,0 +1,117 @@
+-- Tabla: Usuario
+CREATE TABLE Usuario (
+    id_usuario SERIAL PRIMARY KEY,
+    nombre_completo VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL UNIQUE,
+    rol VARCHAR(20) NOT NULL,
+    contrasena TEXT NOT NULL
+);
+
+-- Tabla: Paciente
+CREATE TABLE Paciente (
+    id_paciente SERIAL PRIMARY KEY,
+    nombres VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    edad INTEGER NOT NULL,
+    genero VARCHAR(10) NOT NULL,
+    peso DECIMAL(5,2),
+    estatura DECIMAL(5,2),
+    fecha_nacimiento DATE NOT NULL,
+    escuela VARCHAR(100),
+    grado VARCHAR(50),
+    nombre_tutor VARCHAR(100),
+    telefono_tutor VARCHAR(20),
+    correo_tutor VARCHAR(100)
+);
+
+-- Tabla: HistoriaClinica
+CREATE TABLE HistoriaClinica (
+    id_historia SERIAL PRIMARY KEY,
+    id_paciente INTEGER NOT NULL REFERENCES Paciente(id_paciente),
+    id_estudiante INTEGER NOT NULL REFERENCES Usuario(id_usuario),
+    fecha_evaluacion DATE NOT NULL,
+    motivo_consulta TEXT,
+    historia_condicion_actual TEXT,
+    diagnostico_preliminar TEXT,
+    plan_intervencion TEXT
+);
+
+-- Tabla: EvaluacionPostural
+CREATE TABLE EvaluacionPostural (
+    id_historia INTEGER PRIMARY KEY REFERENCES HistoriaClinica(id_historia),
+    cabeza_cuello TEXT,
+    hombros TEXT,
+    columna TEXT,
+    pelvis TEXT,
+    extremidades TEXT,
+    arco_plantar TEXT
+);
+
+-- Tabla: EvaluacionFuncional
+CREATE TABLE EvaluacionFuncional (
+    id_historia INTEGER PRIMARY KEY REFERENCES HistoriaClinica(id_historia),
+    marcha TEXT,
+    equilibrio TEXT,
+    rango_movimiento TEXT,
+    fuerza_muscular_funcional TEXT
+);
+
+-- Tabla: FuerzaMuscular
+CREATE TABLE FuerzaMuscular (
+    id_fuerza SERIAL PRIMARY KEY,
+    id_historia INTEGER NOT NULL REFERENCES HistoriaClinica(id_historia),
+    zona_anatomica VARCHAR(50) NOT NULL,
+    musculo VARCHAR(100) NOT NULL,
+    grado SMALLINT NOT NULL CHECK (grado BETWEEN 0 AND 5)
+);
+
+-- Tabla: PruebasEspecificas
+CREATE TABLE PruebasEspecificas (
+    id_historia INTEGER PRIMARY KEY REFERENCES HistoriaClinica(id_historia),
+    adams_test BOOLEAN,
+    jack_test BOOLEAN,
+    otras_pruebas TEXT
+);
+
+-- Tabla: Seguimiento
+CREATE TABLE Seguimiento (
+    id_seguimiento SERIAL PRIMARY KEY,
+    id_historia INTEGER NOT NULL REFERENCES HistoriaClinica(id_historia),
+    fecha DATE NOT NULL,
+    intervenciones TEXT,
+    observaciones TEXT
+);
+
+-- Tabla: Antecedentes
+CREATE TABLE Antecedentes (
+    id_historia INTEGER PRIMARY KEY REFERENCES HistoriaClinica(id_historia),
+    enfermedades_importantes TEXT,
+    cirugias_previas TEXT,
+    hospitalizaciones TEXT,
+    alergias TEXT,
+    medicamentos_actuales TEXT,
+    vacunacion_completa BOOLEAN,
+    enf_musculoesqueleticas_familia TEXT,
+    condiciones_hereditarias TEXT
+);
+
+-- Tabla: InformeFinal
+CREATE TABLE InformeFinal (
+    id_informe SERIAL PRIMARY KEY,
+    id_historia INTEGER NOT NULL REFERENCES HistoriaClinica(id_historia),
+    lugar_atencion VARCHAR(100),
+    resumen_clinico TEXT,
+    recomendaciones TEXT,
+    evaluador_nombre VARCHAR(100),
+    fecha_informe DATE
+);
+
+-- Tabla: FirmasConsentimientos
+CREATE TABLE FirmasConsentimientos (
+    id_historia INTEGER PRIMARY KEY REFERENCES HistoriaClinica(id_historia),
+    nombre_evaluador VARCHAR(100),
+    firma_evaluador TEXT,
+    nombre_tutor VARCHAR(100),
+    firma_tutor TEXT,
+    fecha_firma DATE
+);
