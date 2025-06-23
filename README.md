@@ -258,3 +258,29 @@ Verifica que el frontend esté enviando correctamente las peticiones (proxy o CO
 - Integrar formulario completo de historia clínica con conexión al backend.
 - Implementar vista para registrar nuevos pacientes.
 - Conectar con módulos como antecedentes, pruebas y firmas.
+
+
+v1.0.0 - 23 de junio 2025
+[✔] Login funcional con validación de rol
+
+[✔] Redirección automática post-login
+
+[✔] Sidebar dinámico según el rol
+
+[✔] CRUD completo de historias clínicas
+
+[✔] Reportes visuales con Chart.js
+
+[✔] Módulo de diagnóstico por IA con integración OpenAI
+
+[✔] Rutas protegidas con JWT
+
+[✔] Responsive UI básica con Bootstrap
+backend 
+
+cd backend-fisio
+npm install
+# Crear .env con:
+# OPENAI_API_KEY=tu_clave
+# DB configs
+npm run dev
