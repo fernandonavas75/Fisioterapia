@@ -1,70 +1,80 @@
-import { useState } from 'react';
-import axios from 'axios';
-import styles from './LoginForm.module.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import styles from "./LoginForm.module.css";
 
-function LoginForm() {
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [error, setError] = useState('');
-  const [mostrar, setMostrar] = useState(false);
+const LoginForm = () => {
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const response = await axios.post("http://localhost:3000/api/auth/login", {
         correo,
-        contrasena
+        contrasena,
       });
 
       const { token, usuario } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('usuario', JSON.stringify(usuario));
 
-      alert(`Bienvenido, ${usuario.nombre_completo}`);
+      // Guardar en localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+
+      // Redirigir según el rol
+      if (usuario.rol === "admin") {
+        navigate("/admin");
+      } else if (usuario.rol === "estudiante") {
+        navigate("/estudiante");
+      } else {
+        setError("Rol no autorizado");
+      }
     } catch (err) {
-      setError('Credenciales inválidas');
+      setError("Credenciales incorrectas");
     }
   };
 
   return (
     <div className={styles.wrapper}>
-      <form onSubmit={handleLogin} className={styles.formContainer}>
-        <h2 className={styles.title}>Iniciar Sesión</h2>
+      <div className={styles.loginForm}>
+        <h1 className={styles.title}>Iniciar Sesión</h1>
 
-        <div className={styles.inputGroup}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label htmlFor="correo" className={styles.label}>
+            Correo electrónico:
+          </label>
           <input
             type="email"
-            placeholder="Correo electrónico"
+            id="correo"
+            name="correo"
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
-            required
             className={styles.input}
+            required
           />
-        </div>
 
-        <div className={styles.inputGroup}>
+          <label htmlFor="contrasena" className={styles.label}>
+            Contraseña:
+          </label>
           <input
-            type={mostrar ? 'text' : 'password'}
-            placeholder="Contraseña"
+            type="password"
+            id="contrasena"
+            name="contrasena"
             value={contrasena}
             onChange={(e) => setContrasena(e.target.value)}
-            required
             className={styles.input}
+            required
           />
-          <button
-            type="button"
-            className={styles.toggleBtn}
-            onClick={() => setMostrar(!mostrar)}
-          >
-            {mostrar ? '🙈' : '👁️'}
-          </button>
-        </div>
 
-        <button type="submit" className={styles.button}>Ingresar</button>
-        {error && <p className={styles.error}>{error}</p>}
-      </form>
+          <input type="submit" value="Ingresar" className={styles.button} />
+          {error && <p className={styles.error}>{error}</p>}
+        </form>
+      </div>
     </div>
   );
-}
+};
 
 export default LoginForm;

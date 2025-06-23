@@ -1,5 +1,5 @@
 import LoginForm from '../components/LoginForm/LoginForm';
-
+import '../components/LoginForm/LoginForm.module.css'
 function LoginPage() {
   return (
     <div style={{ padding: '2rem' }}>

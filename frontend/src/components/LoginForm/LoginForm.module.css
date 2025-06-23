@@ -1,78 +1,74 @@
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #0f172a;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-.formContainer {
-  width: 100%;
-  max-width: 400px;
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-  font-family: 'Segoe UI', sans-serif;
+.loginForm {
+  width: 400px;
+  margin: 50px auto;
+  background-color: lightblue;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
 }
 
 .title {
   text-align: center;
-  font-size: 1.75rem;
+  margin: 0;
+  padding: 20px 0;
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 2rem;
-  color: #1e293b;
+  color: white;
 }
 
-.inputGroup {
-  position: relative;
-  margin-bottom: 1.5rem;
+.form {
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: gray;
 }
 
 .input {
   width: 100%;
-  padding: 0.9rem;
-  padding-right: 3rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  font-size: 1rem;
-  background-color: #f8fafc;
-}
-
-.toggleBtn {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  color: #64748b;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 .button {
   width: 100%;
-  padding: 0.9rem;
-  background-color: #4338ca;
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 12px;
+  background-color: dodgerblue;
   border: none;
-  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #3730a3;
+  background-color: deepskyblue;
 }
 
 .error {
-  color: #dc2626;
+  color: red;
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 10px;
+}
+
+/* Envoltura para centrar todo */
+.wrapper {
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;              /* Altura completa */
+  width: 100vw;               /* Ancho completo */
+  background-color: #f4f4f4;  /* Tono más sobrio */
+  padding: 1rem;
+  box-sizing: border-box;
 }
