@@ -4,7 +4,7 @@ const app = express();
 require('dotenv').config();
 const sequelize = require('./config/database');
 const PORT = process.env.PORT || 3000;
-
+const iaRoutes = require('./routes/ia.routes');
 // 👇 Middleware primero, antes de las rutas
 app.use(cors()); // Permite peticiones desde el frontend (localhost:5173 en desarrollo)
 app.use(express.json());
@@ -35,6 +35,7 @@ app.use('/api/seguimientos', require('./routes/seguimiento.routes'));
 app.use('/api/informes-finales', require('./routes/informeFinal.routes'));
 app.use('/api/firmas', require('./routes/firmasConsentimientos.routes'));
 app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/ia', iaRoutes);
 
 app.get('/', (req, res) => {
   res.send('API de fisioterapia funcionando');

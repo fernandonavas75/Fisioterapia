@@ -29,7 +29,6 @@ const Usuario = sequelize.define('Usuario', {
   timestamps: false
 });
 
-const HistoriaClinica = require('./HistoriaClinica');
-Usuario.hasMany(HistoriaClinica, { foreignKey: 'id_estudiante' });
+
 
 module.exports = Usuario;

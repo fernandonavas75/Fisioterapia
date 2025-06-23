@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const HistoriaClinicaForm = () => {
   const [pacientes, setPacientes] = useState([]);
@@ -12,16 +13,43 @@ const HistoriaClinicaForm = () => {
     plan_intervencion: '',
   });
 
-  // Extraer el ID del estudiante desde el JWT
+  const { id } = useParams(); // Detectar si viene un ID por URL
+  const navigate = useNavigate();
+
   const token = localStorage.getItem('token');
   const decoded = token ? JSON.parse(atob(token.split('.')[1])) : null;
   const id_estudiante = decoded?.id_usuario;
 
+  // Cargar pacientes
   useEffect(() => {
-    axios.get('http://localhost:3000/api/pacientes')
-      .then(res => setPacientes(res.data))
-      .catch(err => console.error('Error al cargar pacientes:', err));
-  }, []);
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/api/pacientes', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => setPacientes(res.data))
+    .catch(err => console.error('Error al cargar pacientes:', err));
+}, []);
+
+  // Si existe ID (modo edición), cargar datos existentes
+  useEffect(() => {
+    if (id) {
+      axios.get(`http://localhost:3000/api/historias/${id}`)
+        .then(res => {
+          const historia = res.data;
+          setFormData({
+            id_paciente: historia.id_paciente,
+            fecha_evaluacion: historia.fecha_evaluacion.split("T")[0],
+            motivo_consulta: historia.motivo_consulta || '',
+            historia_condicion_actual: historia.historia_condicion_actual || '',
+            diagnostico_preliminar: historia.diagnostico_preliminar || '',
+            plan_intervencion: historia.plan_intervencion || '',
+          });
+        })
+        .catch(err => console.error("Error al cargar historia:", err));
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,34 +62,34 @@ const HistoriaClinicaForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/historias', {
-        ...formData,
-        id_estudiante,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert('Historia clínica registrada correctamente');
-      setFormData({
-        id_paciente: '',
-        fecha_evaluacion: '',
-        motivo_consulta: '',
-        historia_condicion_actual: '',
-        diagnostico_preliminar: '',
-        plan_intervencion: '',
-      });
+      if (id) {
+        // Modo edición (PUT)
+        await axios.put(`http://localhost:3000/api/historias/${id}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        alert("Historia actualizada correctamente");
+      } else {
+        // Modo creación (POST)
+        await axios.post('http://localhost:3000/api/historias', {
+          ...formData,
+          id_estudiante,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        alert("Historia registrada correctamente");
+      }
+      navigate('/estudiante');
     } catch (error) {
       console.error('Error al guardar historia clínica:', error);
-      alert('Error al guardar la historia clínica');
+      alert('Ocurrió un error al guardar los datos');
     }
   };
 
   return (
     <div className="container bg-white p-4 shadow rounded mt-4">
-      <h3 className="mb-4">Historia Clínica Fisioterapéutica Infantil</h3>
+      <h3 className="mb-4">{id ? "Editar Historia Clínica" : "Nueva Historia Clínica"}</h3>
       <form onSubmit={handleSubmit}>
-        {/* Selección de paciente */}
+        {/* Select paciente */}
         <div className="mb-3">
           <label>Paciente</label>
           <select
@@ -80,7 +108,7 @@ const HistoriaClinicaForm = () => {
           </select>
         </div>
 
-        {/* Campos básicos */}
+        {/* Resto de campos */}
         <div className="mb-3">
           <label>Fecha de evaluación</label>
           <input
@@ -92,6 +120,7 @@ const HistoriaClinicaForm = () => {
             required
           />
         </div>
+
         <div className="mb-3">
           <label>Motivo de consulta</label>
           <textarea
@@ -101,6 +130,7 @@ const HistoriaClinicaForm = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
           <label>Historia de la condición actual</label>
           <textarea
@@ -110,6 +140,7 @@ const HistoriaClinicaForm = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
           <label>Diagnóstico preliminar</label>
           <textarea
@@ -119,6 +150,7 @@ const HistoriaClinicaForm = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="mb-3">
           <label>Plan de intervención</label>
           <textarea
@@ -130,8 +162,9 @@ const HistoriaClinicaForm = () => {
         </div>
 
         <button type="submit" className="btn btn-success w-100">
-          Guardar Historia Clínica
+          {id ? "Actualizar Historia" : "Guardar Historia"}
         </button>
+        <button type="button"className="btn btn-secondary w-100 mt-2" onClick={() => navigate('/estudiante')}>Cancelar</button>
       </form>
     </div>
   );

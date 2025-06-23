@@ -3,7 +3,10 @@ import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import EstudianteDashboard from './pages/EstudianteDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import HistoriaClinicaForm from './components/HistoriaClinicaTable';
+import HistoriaClinicaForm from './pages/HistoriaClinicaForm';
+import ReportesPage from './pages/ReportesPage';
+import DiagnosticoIA from './pages/DiagnosticoIA';
+
 
 function App() {
   return (
@@ -20,9 +23,34 @@ function App() {
         <Route path="/estudiante" element={
           <ProtectedRoute allowedRoles={['estudiante']}>
             <EstudianteDashboard />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/HistoriaClinicaForm" element={
+          <ProtectedRoute allowedRoles={['estudiante']}>
             <HistoriaClinicaForm />
           </ProtectedRoute>
         } />
+
+        <Route path="/HistoriaClinicaForm/:id" element={
+          <ProtectedRoute allowedRoles={['estudiante']}>
+            <HistoriaClinicaForm />
+          </ProtectedRoute>
+        } />
+
+        {}
+        <Route path="/reportes" element={
+          <ProtectedRoute allowedRoles={['estudiante']}>
+            <ReportesPage />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/diagnostico-ia" element={
+        <ProtectedRoute allowedRoles={['estudiante']}>
+          <DiagnosticoIA />
+        </ProtectedRoute>
+        } />
+
       </Routes>
     </Router>
   );

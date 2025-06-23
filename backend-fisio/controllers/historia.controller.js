@@ -35,3 +35,16 @@ exports.eliminar = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+exports.obtenerUna = async (req, res) => {
+  try {
+    const historia = await historiaService.obtenerUna(req.params.id);
+    if (!historia) {
+      return res.status(404).json({ error: "Historia clínica no encontrada" });
+    }
+    res.json(historia);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+

@@ -14,10 +14,10 @@ const FirmasConsentimientos = require('./FirmasConsentimientos');
 // Relaciones
 
 // Historia Clínica
-HistoriaClinica.belongsTo(Paciente, { foreignKey: 'id_paciente' });
+HistoriaClinica.belongsTo(Paciente, { foreignKey: 'id_paciente', as: 'paciente' });
 Paciente.hasMany(HistoriaClinica, { foreignKey: 'id_paciente' });
 
-HistoriaClinica.belongsTo(Usuario, { foreignKey: 'id_estudiante' });
+HistoriaClinica.belongsTo(Usuario, { foreignKey: 'id_estudiante', as: 'estudiante' });
 Usuario.hasMany(HistoriaClinica, { foreignKey: 'id_estudiante' });
 
 // Historia -> 1:1 relaciones
