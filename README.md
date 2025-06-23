@@ -221,3 +221,40 @@ Usar npm run dev en ambos proyectos para desarrollo local.
 Asegúrate de que el backend esté corriendo antes de intentar loguearte.
 
 Verifica que el frontend esté enviando correctamente las peticiones (proxy o CORS).
+
+
+## 📌 Patch Notes
+
+### 🗓️ 22 de junio de 2025
+
+#### 🔐 Login de Usuarios
+- Se implementó un formulario de login con diseño moderno, responsivo y validación de campos.
+- Se agregó el manejo de errores para credenciales inválidas.
+- Se integró el consumo del endpoint `/api/auth/login`.
+- Se almacena el token JWT en localStorage.
+- Se redirige al dashboard correspondiente según el rol del usuario (`admin` o `estudiante`).
+
+#### 🧠 Rutas Protegidas
+- Se implementó un componente `ProtectedRoute` para evitar el acceso a vistas sin autenticación.
+- Redirecciona a la pantalla de login si no se encuentra un token válido.
+
+#### 🧑‍🎓 Dashboard Estudiantes
+- Se adaptó una interfaz HTML clásica a React para visualizar historias clínicas.
+- Se utilizó Bootstrap para el diseño visual del panel.
+- Se muestra el nombre real del estudiante según el login.
+- Se agregó botón de cerrar sesión con limpieza del token y redirección segura.
+
+#### 📁 Organización de Archivos
+- Estructura clara de carpetas (`components`, `pages`, `api`).
+- Separación de vistas de login, dashboards y formularios.
+
+#### 🧪 Dependencias Nuevas
+- Bootstrap (`npm install bootstrap`)
+- Axios para llamadas HTTP
+
+---
+
+> ✅ Próximos pasos:
+- Integrar formulario completo de historia clínica con conexión al backend.
+- Implementar vista para registrar nuevos pacientes.
+- Conectar con módulos como antecedentes, pruebas y firmas.
