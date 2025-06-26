@@ -70,7 +70,7 @@ const Reportes = () => {
 
   return (
     <div className="container py-4">
-      <h2 className="mb-4 text-center">Reportes de Atención Fisioterapéutica</h2>
+      <h2 className="mb-4 text-center" id="titReports">Reportes de Atención Fisioterapéutica</h2>
 
       <div className="row justify-content-center">
         <div className="col-md-6 mb-4">

@@ -5,11 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const Sidebar = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
-    navigate("/");
-  };
+
 
   return (
     <div className="sidebar col-md-2 bg-white border-end vh-100 p-3">
