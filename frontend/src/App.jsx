@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ListaPacientes from './pages/ListaPacientes';
+import ActualizarPaciente from './pages/ActualizarPaciente';
 import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import EstudianteDashboard from './pages/EstudianteDashboard';
@@ -38,6 +40,7 @@ function App() {
           </ProtectedRoute>
         } />
 
+        
         {}
         <Route path="/reportes" element={
           <ProtectedRoute allowedRoles={['estudiante']}>
@@ -49,8 +52,17 @@ function App() {
         <ProtectedRoute allowedRoles={['estudiante']}>
           <DiagnosticoIA />
         </ProtectedRoute>
-        } />
+        } />        
+        
+        <Route path="/lista-pacientes" element={
+          <ProtectedRoute allowedRoles={['estudiante']}>
+            <ListaPacientes />
+          </ProtectedRoute>} />
 
+        <Route path="/editar-paciente/:id" element={
+           <ProtectedRoute allowedRoles={['estudiante']}>
+              <ActualizarPaciente />
+           </ProtectedRoute>} />
       </Routes>
     </Router>
   );

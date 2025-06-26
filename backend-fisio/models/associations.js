@@ -9,6 +9,7 @@ const PruebasEspecificas = require('./PruebasEspecificas');
 const Seguimiento = require('./Seguimiento');
 const InformeFinal = require('./InformeFinal');
 const FirmasConsentimientos = require('./FirmasConsentimientos');
+//const Seguimiento = require('./Seguimiento');
 // const { Association } = require('sequelize');
 
 // Relaciones
@@ -53,6 +54,7 @@ module.exports = {
   PruebasEspecificas,
   Seguimiento,
   InformeFinal,
-  FirmasConsentimientos
+  FirmasConsentimientos,
+  Seguimiento
 };
 
