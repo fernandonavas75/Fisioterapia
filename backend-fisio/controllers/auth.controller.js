@@ -1,3 +1,7 @@
+const Usuario = require('../models/Usuario');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 exports.login = async (req, res) => {
   const { correo, contrasena } = req.body;
 

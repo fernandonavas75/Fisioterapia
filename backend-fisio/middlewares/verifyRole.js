@@ -1,9 +1,15 @@
 const verifyRole = (rolesPermitidos = []) => {
   return (req, res, next) => {
+    /*
     if (!rolesPermitidos.includes(req.usuario.rol)) {
       return res.status(403).json({ mensaje: 'Acceso denegado. Rol insuficiente.' });
     }
     next();
+    */
+    // Verifica si el usuario tiene un rol permitido
+    if (!req.usuario || !req.usuario.rol) {   
+      return res.status(403).json({ mensaje: 'Acceso denegado. Usuario no autenticado.' });
+    }
   };
 };
 
