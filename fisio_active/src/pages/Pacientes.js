@@ -1,47 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
+//import {React}, { useEffect } from 'react';
+import axios from 'axios';
+
 
 const Pacientes = () => {
   const rol = localStorage.getItem('usuario');
 
-  const [pacientes, setPacientes] = useState([
-    {
-      id: 'PAC001',
-      nombres: 'Lucía',
-      apellidos: 'Pérez',
-      estudiante_id: 'EST001',
-      estudiante_nombre: 'Andrea López',
-      fecha_actualizacion: '2025-06-06 15:30',
-      edad: 10,
-      genero: 'Femenino',
-      peso: 35,
-      estatura: 140,
-      fecha_nacimiento: '2014-03-12',
-      escuela: 'Unidad Educativa Quito',
-      grado: '5to',
-      nombre_tutor: 'María Pérez',
-      telefono_contacto: '0991234567',
-      correo_contacto: 'maria.tutor@gmail.com'
-    },
-    {
-      id: 'PAC002',
-      nombres: 'Mateo',
-      apellidos: 'Rodríguez',
-      estudiante_id: 'EST002',
-      estudiante_nombre: 'Carlos García',
-      fecha_actualizacion: '2025-06-05 11:10',
-      edad: 11,
-      genero: 'Masculino',
-      peso: 38,
-      estatura: 145,
-      fecha_nacimiento: '2013-06-22',
-      escuela: 'Escuela Los Andes',
-      grado: '6to',
-      nombre_tutor: 'Luis Rodríguez',
-      telefono_contacto: '0987654321',
-      correo_contacto: 'luis.padre@gmail.com'
+  const [pacientes, setPacientes] = useState([]);
+
+  useEffect(() => {
+  const fetchPacientes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:3001/api/pacientes', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const pacientesTransformados = response.data.map((p) => ({
+        id: `PAC${String(p.id_paciente).padStart(3, '0')}`,
+        nombres: p.nombres,
+        apellidos: p.apellidos,
+        edad: p.edad,
+        genero: p.genero,
+        peso: p.peso,
+        estatura: p.estatura,
+        fecha_nacimiento: p.fecha_nacimiento?.split('T')[0],
+        escuela: p.escuela,
+        grado: p.grado,
+        nombre_tutor: p.nombre_tutor,
+        telefono_contacto: p.telefono_tutor,
+        correo_contacto: p.correo_tutor,
+      }));
+
+      setPacientes(pacientesTransformados);
+    } catch (error) {
+      console.error('Error al cargar pacientes:', error);
     }
-  ]);
+  };
+
+  fetchPacientes();
+}, []);
+
 
   const [showModal, setShowModal] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);

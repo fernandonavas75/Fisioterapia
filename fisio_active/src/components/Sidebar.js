@@ -29,7 +29,7 @@ const Sidebar = () => {
 
       {rol === 'admin' && (
         <>
-          <Link to="/dashboard" className="sidebar-link active">
+          <Link to="/coord" className="sidebar-link active">
             <i className="bi bi-house-door me-2"></i>Inicio
           </Link>
           <Link to="/estudiantes" className="sidebar-link">

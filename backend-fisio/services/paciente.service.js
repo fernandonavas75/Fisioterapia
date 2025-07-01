@@ -6,6 +6,7 @@ exports.obtenerTodos = async () => {
 
 exports.crear = async (data) => {
   return await Paciente.create(data);
+  //hacer
 };
 
 exports.actualizar = async (id, data) => {
