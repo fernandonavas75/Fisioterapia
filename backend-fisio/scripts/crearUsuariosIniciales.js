@@ -19,6 +19,24 @@ async function crearUsuariosIniciales() {
         correo: 'estudiante@example.com',
         rol: 'estudiante',
         contrasena: await bcrypt.hash('123456', 10)
+      },
+      {
+        nombre_completo: 'Luis Salazar',
+        correo: 'luis@example.com',
+        rol: 'estudiante',
+        contrasena: await bcrypt.hash('123456', 10)
+      },
+      {
+        nombre_completo: 'Francisco Dias',
+        correo: 'francisco@example.com',
+        rol: 'estudiante',
+        contrasena: await bcrypt.hash('123456', 10)
+      },
+      {
+        nombre_completo: 'Fernando Navas',
+        correo: 'fernando@example.com',
+        rol: 'estudiante',
+        contrasena: await bcrypt.hash('123456', 10)
       }
     ];
 
