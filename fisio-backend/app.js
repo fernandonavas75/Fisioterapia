@@ -12,6 +12,7 @@ const antecedentesRoutes = require('./routes/antecedentes.routes');
 const evaluacionPosturalRoutes = require('./routes/evaluacionpostural.routes');
 const evaluacionFuncionalRoutes = require('./routes/evaluacionfuncional.routes');
 const fuerzaMuscularRoutes = require('./routes/fuerzamuscular.routes');
+const pruebasEspecificasRoutes = require('./routes/pruebasespecificas.routes');
 const app = express();
 
 app.use(cors());
@@ -25,6 +26,7 @@ app.use('/api/antecedentes', antecedentesRoutes);
 app.use('/api/evaluacion-postural', evaluacionPosturalRoutes);
 app.use('/api/evaluacion-funcional', evaluacionFuncionalRoutes);
 app.use('/api/fuerza-muscular', fuerzaMuscularRoutes);
+app.use('/api/pruebas-especificas', pruebasEspecificasRoutes);
 
 // Ruta 404
 app.use((req, res) => {
