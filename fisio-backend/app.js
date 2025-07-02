@@ -8,6 +8,7 @@ const usuarioRoutes = require('./routes/usuario.routes');
 const pacienteRoutes = require('./routes/paciente.routes'); 
 const historiaClinicaRoutes = require('./routes/historiaclinica.routes');
 const sectorRoutes = require('./routes/sector.routes');
+const antecedentesRoutes = require('./routes/antecedentes.routes');
 const app = express();
 
 app.use(cors());
@@ -17,6 +18,8 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/pacientes', pacienteRoutes);
 app.use('/api/historias-clinicas', historiaClinicaRoutes);
 app.use('/api/sectores', sectorRoutes);
+app.use('/api/antecedentes', antecedentesRoutes);
+
 // Ruta 404
 app.use((req, res) => {
   res.status(404).json({
