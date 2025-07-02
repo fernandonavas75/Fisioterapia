@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom'; // al inicio del archivo
+import '../styles/Fichas.css';
+
 
 const Fichas = () => {
   const navigate = useNavigate();
@@ -67,8 +69,8 @@ const Fichas = () => {
             + Agregar Ficha
         </Button>
       </div>
-      <Table striped bordered hover responsive className="mt-3">
-        <thead className="table-light">
+      <Table className="table-fichas">
+        <thead>
           <tr>
             <th>#</th>
             <th>ID Ficha</th>
@@ -90,14 +92,14 @@ const Fichas = () => {
               <td>{ficha.fecha_registro}</td>
               <td>{ficha.numero_atencion}</td>
               <td>
-                <Button variant={ficha.tiene_diagnostico ? 'success' : 'outline-secondary'} size="sm" disabled>
+                <span className={`badge-diagnostico ${ficha.tiene_diagnostico ? 'badge-asociado' : 'badge-sin'}`}>
                   {ficha.tiene_diagnostico ? 'Asociado' : 'Sin diagnóstico'}
-                </Button>
+                </span>
               </td>
               <td>
-                <Button variant="primary" size="sm" onClick={() => handleEditar(index)}>
+                <button className="btn-editar" onClick={() => handleEditar(index)}>
                   Editar
-                </Button>
+                </button>
               </td>
             </tr>
           ))}
