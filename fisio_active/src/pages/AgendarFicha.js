@@ -1,228 +1,233 @@
-import { useState } from 'react';
-import './AgendarFicha.css';
+  import { useState } from 'react';
+  import './AgendarFicha.css';
 
 
-const FormularioHistoriaClinica = () => {
-  const [paso, setPaso] = useState(1);
-  const [formulario, setFormulario] = useState({
-    // Paso 1
-    nombres: '',
-    apellidos: '',
-    edad: '',
-    genero: '',
-    peso: '',
-    estatura: '',
-    fechaNacimiento: '',
-    fechaEvaluacion: '',
-    escuela: '',
-    grado: '',
-    nombresTutor: '',
-    telefonoTutor: '',
-    correoTutor: '',
+  const FormularioHistoriaClinica = () => {
+    const [paso, setPaso] = useState(1);
+    const [formulario, setFormulario] = useState({
+      // Paso 1
+      nombres: '',
+      apellidos: '',
+      edad: '',
+      genero: '',
+      peso: '',
+      estatura: '',
+      fechaNacimiento: '',
+      fechaEvaluacion: '',
+      escuela: '',
+      grado: '',
+      nombresTutor: '',
+      telefonoTutor: '',
+      correoTutor: '',
 
-    // Paso 2
-    enfermedadesImportantes: '',
-    cirugiasPrevias: '',
-    hospitalizaciones: '',
-    alergias: '',
-    medicamentosActuales: '',
-    vacunacionCompleta: '',
-    enfMusculoesqueleticas: '',
-    condicionesHereditarias: '',
-    motivoConsulta: '',
-    inicioSintomas: '',
-    descripcionSintomas: '',
-    factoresSintomas: '',
-    tratamientosPrevios: '',
+      // Paso 2
+      enfermedadesImportantes: '',
+      cirugiasPrevias: '',
+      hospitalizaciones: '',
+      alergias: '',
+      medicamentosActuales: '',
+      vacunacionCompleta: '',
+      enfMusculoesqueleticas: '',
+      condicionesHereditarias: '',
+      motivoConsulta: '',
+      inicioSintomas: '',
+      descripcionSintomas: '',
+      factoresSintomas: '',
+      tratamientosPrevios: '',
 
-    // Paso 3
-    cabezaCuello: '',
-    hombros: '',
-    columna: '',
-    pelvis: '',
-    extremidades: '',
-    arcoPlantar: '',
-    puntosDolorosos: '',
-    evaDolor: 0,
-    tejidosBlandos: '',
-    estructurasOseas: '',
+      // Paso 3
+      cabezaCuello: '',
+      hombros: '',
+      columna: '',
+      pelvis: '',
+      extremidades: '',
+      arcoPlantar: '',
+      puntosDolorosos: '',
+      evaDolor: 0,
+      tejidosBlandos: '',
+      estructurasOseas: '',
 
 
-     // Paso 4
-    marcha: '',
-    marchaDescripcion: '',
-    equilibrio: '',
-    rangoMovimiento: '',
-    rangoMovimientoAreas: '',
-    fuerzaMuscular: '',
-    fuerzaMuscularAreas: '',
-    tablaFuerzaMuscular: {
-      cuello: '',
-      hombro: '',
-      codo: '',
-      muneca: '',
-      dedos: '',
-      cadera: '',
-      rodilla: '',
-      tobillo: '',
-      pie: '',
-    // Nuevos campos (Miembro inferior y Tronco)
-      caderaFlexion: '',
-      caderaExtension: '',
-      caderaAbduccion: '',
-      caderaAduccion: '',
-      rodillaFlexion: '',
-      rodillaExtension: '',
-      tobilloDorsiflexion: '',
-      tobilloPlantiflexion: '',
-      pieInversion: '',
-      pieEversion: '',
-      troncoFlexion: '',
-      troncoExtension: '',
-      troncoRotacion: '',
-    
-      testAdams: '',
-      testJack: '',
-      otrasPruebas: '',
-      diagnosticoPreliminar: '',
+      // Paso 4
+      marcha: '',
+      marchaDescripcion: '',
+      equilibrio: '',
+      rangoMovimiento: '',
+      rangoMovimientoAreas: '',
+      fuerzaMuscular: '',
+      fuerzaMuscularAreas: '',
+      tablaFuerzaMuscular: {
+        cuello: '',
+        hombro: '',
+        codo: '',
+        muneca: '',
+        dedos: '',
+        cadera: '',
+        rodilla: '',
+        tobillo: '',
+        pie: '',
+      // Nuevos campos (Miembro inferior y Tronco)
+        caderaFlexion: '',
+        caderaExtension: '',
+        caderaAbduccion: '',
+        caderaAduccion: '',
+        rodillaFlexion: '',
+        rodillaExtension: '',
+        tobilloDorsiflexion: '',
+        tobilloPlantiflexion: '',
+        pieInversion: '',
+        pieEversion: '',
+        troncoFlexion: '',
+        troncoExtension: '',
+        troncoRotacion: '',
       
-      // Paso 5
-      objetivos: '',
-      fortalecimiento: '',
-      estiramiento: '',
-      reeducacionPostural: '',
-      otrasTecnicas: '',
-      calzadoAdecuado: '',
-      especificarCalzado: '',
-      actividadesRecomendadas: '',
-      restricciones: '',
-      seguimiento1Fecha: '',
-      seguimiento1Observaciones: '',
-      seguimiento2Fecha: '',
-      seguimiento2Observaciones: '',
-      firmaEvaluador: '',
-      nombreEvaluador: '',
-      firmaTutor: '',
-      nombreTutor: '',
-    }
+        testAdams: '',
+        testJack: '',
+        otrasPruebas: '',
+        diagnosticoPreliminar: '',
+        
+        // Paso 5
+        objetivos: '',
+        fortalecimiento: '',
+        estiramiento: '',
+        reeducacionPostural: '',
+        otrasTecnicas: '',
+        calzadoAdecuado: '',
+        especificarCalzado: '',
+        actividadesRecomendadas: '',
+        restricciones: '',
+        seguimiento1Fecha: '',
+        seguimiento1Observaciones: '',
+        seguimiento2Fecha: '',
+        seguimiento2Observaciones: '',
+        firmaEvaluador: '',
+        nombreEvaluador: '',
+        firmaTutor: '',
+        nombreTutor: '',
+      },
+        
+      
+      ///IA
+        diagnosticoPreliminar: '', // Este campo es parte de la IA
+        iaBusqueda: '', // Campo de búsqueda por IA
 
-    });
+      });
 
-    
-    
+      
+      
 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormulario({ ...formulario, [name]: value });
-  };
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormulario({ ...formulario, [name]: value });
+    };
 
-  const siguientePaso = () => setPaso(paso + 1);
-  const pasoAnterior = () => setPaso(paso - 1);
+    const siguientePaso = () => setPaso(paso + 1);
+    const pasoAnterior = () => setPaso(paso - 1);
 
-  return (
-    <div className="container mt-4">
-      {paso === 1 && (
-        <div>
-          <h5>Datos del paciente</h5>
-          <div className="row">
-            <div className="col-md-6">
-              <input type="text" className="form-control mb-2" name="nombres" placeholder="Nombres" value={formulario.nombres} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="edad" placeholder="Edad" value={formulario.edad} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="peso" placeholder="Peso (kg)" value={formulario.peso} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="estatura" placeholder="Estatura (cm)" value={formulario.estatura} onChange={handleChange} />
-              <input type="date" className="form-control mb-2" name="fechaNacimiento" placeholder="Fecha de nacimiento" value={formulario.fechaNacimiento} onChange={handleChange} />
-              <input type="date" className="form-control mb-2" name="fechaEvaluacion" placeholder="Fecha de evaluación" value={formulario.fechaEvaluacion} onChange={handleChange} />
-            </div>
-            <div className="col-md-6">
-              <input type="text" className="form-control mb-2" name="apellidos" placeholder="Apellidos" value={formulario.apellidos} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="genero" placeholder="Género" value={formulario.genero} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="escuela" placeholder="Escuela" value={formulario.escuela} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="grado" placeholder="Grado" value={formulario.grado} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="nombresTutor" placeholder="Nombre del tutor" value={formulario.nombresTutor} onChange={handleChange} />
-              <input type="text" className="form-control mb-2" name="telefonoTutor" placeholder="Teléfono del tutor" value={formulario.telefonoTutor} onChange={handleChange} />
-              <input type="email" className="form-control mb-2" name="correoTutor" placeholder="Correo electrónico del tutor" value={formulario.correoTutor} onChange={handleChange} />
-            </div>
-          </div>
-          <button className="btn btn-primary mt-3" onClick={siguientePaso}>Siguiente</button>
-        </div>
-      )}
-
-      {paso === 2 && (
-        <div>
-          <h5>Antecedentes médicos y motivo de consulta</h5>
-          <h5>Antecedentes personales</h5>
-          <textarea className="form-control mb-2" name="enfermedadesImportantes" placeholder="Enfermedades importantes" value={formulario.enfermedadesImportantes} onChange={handleChange}></textarea>
-          <textarea className="form-control mb-2" name="cirugiasPrevias" placeholder="Cirugías previas" value={formulario.cirugiasPrevias} onChange={handleChange}></textarea>
-          <textarea className="form-control mb-2" name="hospitalizaciones" placeholder="Hospitalizaciones" value={formulario.hospitalizaciones} onChange={handleChange}></textarea>
-          <textarea className="form-control mb-2" name="alergias" placeholder="Alergias" value={formulario.alergias} onChange={handleChange}></textarea>
-          <textarea className="form-control mb-2" name="medicamentosActuales" placeholder="Medicamentos actuales" value={formulario.medicamentosActuales} onChange={handleChange}></textarea>
-
-          <div className="mb-3">
-            <label className="form-label d-block">Vacunación completa:</label>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="vacunacionCompleta"
-                value="Sí"
-                checked={formulario.vacunacionCompleta === "Sí"}
-                onChange={handleChange}
-              />
-              <label className="form-check-label">Sí</label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="vacunacionCompleta"
-                value="No"
-                checked={formulario.vacunacionCompleta === "No"}
-                onChange={handleChange}
-              />
-              <label className="form-check-label">No</label>
-            </div>
-          </div>
-          <h5>Antecedentes familiares</h5>
-              <textarea className="form-control mb-2" name="enfMusculoesqueleticas" placeholder="Enf. musculoesqueléticas familiares" value={formulario.enfMusculoesqueleticas} onChange={handleChange}></textarea>
-              <textarea className="form-control mb-2" name="condicionesHereditarias" placeholder="Otras condiciones hereditarias" value={formulario.condicionesHereditarias} onChange={handleChange}></textarea>
-              <textarea className="form-control mb-2" name="motivoConsulta" placeholder="Motivo de consulta" value={formulario.motivoConsulta} onChange={handleChange}></textarea>
-
-              <div className="mb-3">
-                <label className="form-label d-block">Inicio de síntomas:</label>
-                <div className="form-check form-check-inline">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="inicioSintomas"
-                    value="Gradual"
-                    checked={formulario.inicioSintomas === "Gradual"}
-                    onChange={handleChange}
-                  />
-                  <label className="form-check-label">Gradual</label>
-                </div>
-                <div className="form-check form-check-inline">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="inicioSintomas"
-                    value="Repentino"
-                    checked={formulario.inicioSintomas === "Repentino"}
-                    onChange={handleChange}
-                  />
-                  <label className="form-check-label">Repentino</label>
-                </div>
+    return (
+      <div className="container mt-4">
+        {paso === 1 && (
+          <div>
+            <h5>Datos del paciente</h5>
+            <div className="row">
+              <div className="col-md-6">
+                <input type="text" className="form-control mb-2" name="nombres" placeholder="Nombres" value={formulario.nombres} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="edad" placeholder="Edad" value={formulario.edad} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="peso" placeholder="Peso (kg)" value={formulario.peso} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="estatura" placeholder="Estatura (cm)" value={formulario.estatura} onChange={handleChange} />
+                <input type="date" className="form-control mb-2" name="fechaNacimiento" placeholder="Fecha de nacimiento" value={formulario.fechaNacimiento} onChange={handleChange} />
+                <input type="date" className="form-control mb-2" name="fechaEvaluacion" placeholder="Fecha de evaluación" value={formulario.fechaEvaluacion} onChange={handleChange} />
               </div>
-              <textarea className="form-control mb-2" name="descripcionSintomas" placeholder="Descripción de los síntomas" value={formulario.descripcionSintomas} onChange={handleChange}></textarea>
-              <textarea className="form-control mb-2" name="factoresSintomas" placeholder="Factores que agravan o alivian" value={formulario.factoresSintomas} onChange={handleChange}></textarea>
-              <textarea className="form-control mb-2" name="tratamientosPrevios" placeholder="Tratamientos previos" value={formulario.tratamientosPrevios} onChange={handleChange}></textarea>
-
-              <div className="d-flex justify-content-between">
-                <button className="btn btn-secondary mt-3" onClick={pasoAnterior}>Anterior</button>
-                <button className="btn btn-primary mt-3" onClick={siguientePaso}>Siguiente</button>
+              <div className="col-md-6">
+                <input type="text" className="form-control mb-2" name="apellidos" placeholder="Apellidos" value={formulario.apellidos} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="genero" placeholder="Género" value={formulario.genero} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="escuela" placeholder="Escuela" value={formulario.escuela} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="grado" placeholder="Grado" value={formulario.grado} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="nombresTutor" placeholder="Nombre del tutor" value={formulario.nombresTutor} onChange={handleChange} />
+                <input type="text" className="form-control mb-2" name="telefonoTutor" placeholder="Teléfono del tutor" value={formulario.telefonoTutor} onChange={handleChange} />
+                <input type="email" className="form-control mb-2" name="correoTutor" placeholder="Correo electrónico del tutor" value={formulario.correoTutor} onChange={handleChange} />
               </div>
             </div>
-          )}
+            <button className="btn btn-primary mt-3" onClick={siguientePaso}>Siguiente</button>
+          </div>
+        )}
+
+        {paso === 2 && (
+          <div>
+            <h5>Antecedentes médicos y motivo de consulta</h5>
+            <h5>Antecedentes personales</h5>
+            <textarea className="form-control mb-2" name="enfermedadesImportantes" placeholder="Enfermedades importantes" value={formulario.enfermedadesImportantes} onChange={handleChange}></textarea>
+            <textarea className="form-control mb-2" name="cirugiasPrevias" placeholder="Cirugías previas" value={formulario.cirugiasPrevias} onChange={handleChange}></textarea>
+            <textarea className="form-control mb-2" name="hospitalizaciones" placeholder="Hospitalizaciones" value={formulario.hospitalizaciones} onChange={handleChange}></textarea>
+            <textarea className="form-control mb-2" name="alergias" placeholder="Alergias" value={formulario.alergias} onChange={handleChange}></textarea>
+            <textarea className="form-control mb-2" name="medicamentosActuales" placeholder="Medicamentos actuales" value={formulario.medicamentosActuales} onChange={handleChange}></textarea>
+
+            <div className="mb-3">
+              <label className="form-label d-block">Vacunación completa:</label>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="vacunacionCompleta"
+                  value="Sí"
+                  checked={formulario.vacunacionCompleta === "Sí"}
+                  onChange={handleChange}
+                />
+                <label className="form-check-label">Sí</label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="vacunacionCompleta"
+                  value="No"
+                  checked={formulario.vacunacionCompleta === "No"}
+                  onChange={handleChange}
+                />
+                <label className="form-check-label">No</label>
+              </div>
+            </div>
+            <h5>Antecedentes familiares</h5>
+                <textarea className="form-control mb-2" name="enfMusculoesqueleticas" placeholder="Enf. musculoesqueléticas familiares" value={formulario.enfMusculoesqueleticas} onChange={handleChange}></textarea>
+                <textarea className="form-control mb-2" name="condicionesHereditarias" placeholder="Otras condiciones hereditarias" value={formulario.condicionesHereditarias} onChange={handleChange}></textarea>
+                <textarea className="form-control mb-2" name="motivoConsulta" placeholder="Motivo de consulta" value={formulario.motivoConsulta} onChange={handleChange}></textarea>
+
+                <div className="mb-3">
+                  <label className="form-label d-block">Inicio de síntomas:</label>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inicioSintomas"
+                      value="Gradual"
+                      checked={formulario.inicioSintomas === "Gradual"}
+                      onChange={handleChange}
+                    />
+                    <label className="form-check-label">Gradual</label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inicioSintomas"
+                      value="Repentino"
+                      checked={formulario.inicioSintomas === "Repentino"}
+                      onChange={handleChange}
+                    />
+                    <label className="form-check-label">Repentino</label>
+                  </div>
+                </div>
+                <textarea className="form-control mb-2" name="descripcionSintomas" placeholder="Descripción de los síntomas" value={formulario.descripcionSintomas} onChange={handleChange}></textarea>
+                <textarea className="form-control mb-2" name="factoresSintomas" placeholder="Factores que agravan o alivian" value={formulario.factoresSintomas} onChange={handleChange}></textarea>
+                <textarea className="form-control mb-2" name="tratamientosPrevios" placeholder="Tratamientos previos" value={formulario.tratamientosPrevios} onChange={handleChange}></textarea>
+
+                <div className="d-flex justify-content-between">
+                  <button className="btn btn-secondary mt-3" onClick={pasoAnterior}>Anterior</button>
+                  <button className="btn btn-primary mt-3" onClick={siguientePaso}>Siguiente</button>
+                </div>
+              </div>
+            )}
 
           {paso === 3 && (
             <div>
@@ -569,18 +574,6 @@ const FormularioHistoriaClinica = () => {
                     />
                   </div>
 
-                  {/* Diagnóstico fisioterapéutico */}
-                  <div className="mb-3">
-                    <label className="form-label">Diagnóstico fisioterapéutico preliminar:</label>
-                    <textarea
-                      className="form-control"
-                      name="diagnosticoPreliminar"
-                      placeholder="Escriba el diagnóstico preliminar"
-                      value={formulario.diagnosticoPreliminar}
-                      onChange={handleChange}
-                    />
-                  </div>
-
               </div>
               <div className="d-flex justify-content-between mt-3">
                 <button className="btn btn-secondary" onClick={pasoAnterior}>Anterior</button>
@@ -588,8 +581,49 @@ const FormularioHistoriaClinica = () => {
               </div>
             </div>
           )}
-
+          
+          {/*// En el paso 5 (Ejemplo de paso nuevo)*/}
           {paso === 5 && (
+            <div>
+              <h5>Diagnóstico Fisioterapéutico</h5>
+
+              {/* Diagnóstico fisioterapéutico */}
+              <div className="mb-3">
+                <label className="form-label">Diagnóstico fisioterapéutico preliminar:</label>
+                <textarea
+                  className="form-control"
+                  name="diagnosticoPreliminar"
+                  placeholder="Escriba el diagnóstico preliminar"
+                  value={formulario.diagnosticoPreliminar}
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* Campo de IA */}
+              <div className="mb-3">
+                <label className="form-label">Recomendación por IA:</label>
+                <div className="d-flex">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="iaBusqueda"
+                    placeholder="Buscar diagnóstico relacionado"
+                    value={formulario.iaBusqueda}
+                    onChange={handleChange}
+                  />
+                  <button className="btn btn-info ms-2" type="button">
+                    Buscar
+                  </button>
+                </div>
+              </div>
+              <div className="d-flex justify-content-between mt-4">
+                <button className="btn btn-secondary" onClick={pasoAnterior}>Anterior</button>
+                <button className="btn btn-primary" onClick={siguientePaso}>Siguiente</button>
+              </div>
+            </div>
+          )}
+
+          {paso === 6 && (
             <div>
               <h5>Plan de intervención</h5>
 
@@ -641,7 +675,7 @@ const FormularioHistoriaClinica = () => {
             </div>
           )}
 
-          {paso === 6 && (
+          {paso === 7 && (
             <div>
               <h5>Registro de Seguimiento y Evolución</h5>
 
