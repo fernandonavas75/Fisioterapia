@@ -14,6 +14,8 @@ const evaluacionFuncionalRoutes = require('./routes/evaluacionfuncional.routes')
 const fuerzaMuscularRoutes = require('./routes/fuerzamuscular.routes');
 const pruebasEspecificasRoutes = require('./routes/pruebasespecificas.routes');
 const seguimientoRoutes = require('./routes/seguimiento.routes');
+const informeFinalRoutes = require('./routes/informefinal.routes');
+const firmasConsentimientosRoutes = require('./routes/firmasconsentimientos.routes');
 const app = express();
 
 app.use(cors());
@@ -29,7 +31,8 @@ app.use('/api/evaluacion-funcional', evaluacionFuncionalRoutes);
 app.use('/api/fuerza-muscular', fuerzaMuscularRoutes);
 app.use('/api/pruebas-especificas', pruebasEspecificasRoutes);
 app.use('/api/seguimientos', seguimientoRoutes);
-
+app.use('/api/informes-finales', informeFinalRoutes);
+app.use('/api/firmas-consentimientos', firmasConsentimientosRoutes);
 // Ruta 404
 app.use((req, res) => {
   res.status(404).json({
