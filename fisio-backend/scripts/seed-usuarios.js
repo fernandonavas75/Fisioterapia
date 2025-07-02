@@ -2,15 +2,20 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const sequelize = require('../config/database');
 const Usuario = require('../models/Usuario');
+const Paciente = require('../models/Paciente');
 
-async function seedUsuarios() {
+async function seedData() {
   try {
     await sequelize.authenticate();
-    console.log('Conexión a la base de datos establecida');
+    console.log('✅ Conexión a la base de datos establecida.');
+
+    /** -------------------------------------------
+     * Usuarios
+     * ----------------------------------------- */
 
     // Opcional: eliminar usuarios existentes
     await Usuario.destroy({ where: {} });
-    console.log('Usuarios existentes eliminados');
+    console.log('🗑️  Usuarios existentes eliminados.');
 
     // Generar hashes
     const adminHash = await bcrypt.hash('admin123', 10);
@@ -36,12 +41,40 @@ async function seedUsuarios() {
       conexion: new Date()
     });
 
-    console.log('Seed ejecutado correctamente.');
+    console.log('✅ Usuarios creados.');
+
+    /** -------------------------------------------
+     * Pacientes
+     * ----------------------------------------- */
+
+    // Opcional: eliminar pacientes existentes
+    await Paciente.destroy({ where: {} });
+    console.log('🗑️  Pacientes existentes eliminados.');
+
+    await Paciente.create({
+      nombres: 'Luis',
+      apellidos: 'Martínez',
+      genero: 'Masculino',
+      fecha_nacimiento: '2010-05-20'
+    });
+
+    await Paciente.create({
+      nombres: 'Ana',
+      apellidos: 'García',
+      genero: 'Femenino',
+      fecha_nacimiento: '2012-08-15'
+    });
+
+    console.log('✅ Pacientes creados.');
+
+    console.log('🌱 Seed ejecutado correctamente.');
     process.exit(0);
   } catch (error) {
-    console.error('Error ejecutando seed:', error);
+    console.error('🚫 Error ejecutando seed:', error);
     process.exit(1);
   }
 }
 
-seedUsuarios();
+seedData();
+// Nota: Asegúrate de que la base de datos esté corriendo y las tablas estén sincronizadas antes de ejecutar este script.
+// Puedes ejecutar este script con el comando: node scripts/seed-usuarios.js

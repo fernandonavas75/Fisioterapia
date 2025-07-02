@@ -6,6 +6,8 @@ require('./models');
 
 const usuarioRoutes = require('./routes/usuario.routes');
 const pacienteRoutes = require('./routes/paciente.routes'); 
+const historiaClinicaRoutes = require('./routes/historiaclinica.routes');
+const sectorRoutes = require('./routes/sector.routes');
 const app = express();
 
 app.use(cors());
@@ -13,7 +15,8 @@ app.use(express.json());
 
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/pacientes', pacienteRoutes);
-
+app.use('/api/historias-clinicas', historiaClinicaRoutes);
+app.use('/api/sectores', sectorRoutes);
 // Ruta 404
 app.use((req, res) => {
   res.status(404).json({
@@ -21,6 +24,7 @@ app.use((req, res) => {
     url: req.originalUrl
   });
 });
+
 
 sequelize.sync({ alter: true })
   .then(() => {
