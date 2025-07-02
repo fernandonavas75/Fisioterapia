@@ -16,6 +16,8 @@ const pruebasEspecificasRoutes = require('./routes/pruebasespecificas.routes');
 const seguimientoRoutes = require('./routes/seguimiento.routes');
 const informeFinalRoutes = require('./routes/informefinal.routes');
 const firmasConsentimientosRoutes = require('./routes/firmasconsentimientos.routes');
+const pacienteEstudianteRoutes = require('./routes/pacienteestudiante.routes');
+const pacienteSectorRoutes = require('./routes/pacientesector.routes');
 const app = express();
 
 app.use(cors());
@@ -33,6 +35,8 @@ app.use('/api/pruebas-especificas', pruebasEspecificasRoutes);
 app.use('/api/seguimientos', seguimientoRoutes);
 app.use('/api/informes-finales', informeFinalRoutes);
 app.use('/api/firmas-consentimientos', firmasConsentimientosRoutes);
+app.use('/api/paciente-estudiante', pacienteEstudianteRoutes);
+app.use('/api/paciente-sector', pacienteSectorRoutes);
 // Ruta 404
 app.use((req, res) => {
   res.status(404).json({
