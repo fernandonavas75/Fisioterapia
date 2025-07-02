@@ -5,13 +5,14 @@ const sequelize = require('./config/database');
 require('./models'); 
 
 const usuarioRoutes = require('./routes/usuario.routes');
-
+const pacienteRoutes = require('./routes/paciente.routes'); 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/pacientes', pacienteRoutes);
 
 // Ruta 404
 app.use((req, res) => {

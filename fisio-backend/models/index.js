@@ -1,6 +1,6 @@
 const Usuario = require('./Usuario');
-
+const Paciente = require('./Paciente');
 module.exports = {
   Usuario, 
-    // Add other models here as needed
+  Paciente  // Add other models here as needed
 }
