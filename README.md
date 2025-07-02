@@ -2,9 +2,9 @@
 
 *Transforming Care Through Seamless Clinical Innovation*
 
-![last commit](https://img.shields.io/github/last-commit/tu_usuario/tu_repositorio)
+![last commit](https://img.shields.io/github/last-commit/fernandonavas75/Fisioterapia)
 ![javascript](https://img.shields.io/badge/javascript-97%25-yellow)
-![languages](https://img.shields.io/github/languages/count/tu_usuario/tu_repositorio)
+![languages](https://img.shields.io/github/languages/count/fernandonavas75/Fisioterapia)
 
 Built with the tools and technologies:
 
