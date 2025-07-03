@@ -1,7 +1,7 @@
   import { useState } from 'react';
   import './AgendarFicha.css';
-
-
+  // import api from '../api/axiosConfig';
+  
   const FormularioHistoriaClinica = () => {
     const [paso, setPaso] = useState(1);
     const [formulario, setFormulario] = useState({
@@ -106,7 +106,7 @@
         nombreTutor: '',
       },
         
-      
+
       ///IA
         diagnosticoPreliminar: '', // Este campo es parte de la IA
         iaBusqueda: '', // Campo de búsqueda por IA

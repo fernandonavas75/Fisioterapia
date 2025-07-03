@@ -97,9 +97,11 @@ const Fichas = () => {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <Button variant="success" className="btn-ficha">+ Agregar Ficha</Button>
-        <Button variant="primary" className="btn-ficha">Enviar Fichas</Button>
-        <Button variant="outline-primary" className="btn-ficha">Descargar PDF</Button>
+        <h4>Fichas Registradas</h4>
+        
+        <Button variant="success" onClick={() => navigate('/agendar')}>
+          + Agregar Ficha
+        </Button>
       </div>
 
       <Table className="table-fichas">

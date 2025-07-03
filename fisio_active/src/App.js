@@ -37,6 +37,7 @@ function App() {
         <Route path="/informe" element={<Layout><Informe /></Layout>} />
         <Route path="/agendar" element={<Layout><AgendarFicha /></Layout>} />
         <Route path="/agregar-estudiantes" element={<Layout><AgregarEstudiantes /></Layout>} />
+        <Route path="/informe" element={<Layout><Informe /></Layout>} />
       </Routes>
     </Router>
   );
