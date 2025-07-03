@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axiosConfig';
 import '../styles/Estudiantes.css';
 
 const Estudiantes = () => {
@@ -19,47 +20,18 @@ const Estudiantes = () => {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   useEffect(() => {
-    const base = [
-      {
-        id_usuario: 1,
-        cedula: '1723456789',
-        nombres: 'Andrea',
-        apellidos: 'López',
-        correo: 'andrea.lopez@puce.edu.ec',
-        rol: 'estudiante',
-        conexion: '2025-06-04',
-        contrasena: 'andrea123'
-      },
-      {
-        id_usuario: 2,
-        cedula: '1711122233',
-        nombres: 'Carlos',
-        apellidos: 'García',
-        correo: 'carlos.garcia@puce.edu.ec',
-        rol: 'estudiante',
-        conexion: '2025-06-05',
-        contrasena: 'andrea123'
-      },
-      {
-        id_usuario: 3,
-        cedula: '1719988776',
-        nombres: 'Valeria',
-        apellidos: 'Mendoza',
-        correo: 'valeria.mendoza@puce.edu.ec',
-        rol: 'estudiante',
-        conexion: '2025-06-06',
-        contrasena: 'andrea123'
+    const fetchEstudiantes = async () => {
+      try {
+        const res = await api.get('/usuarios');
+        const estudiantesFiltrados = res.data.filter(u => u.rol === 'estudiante');
+        setEstudiantes(estudiantesFiltrados);
+      } catch (error) {
+        console.error('Error al cargar estudiantes:', error);
       }
-    ];
-    const guardados = JSON.parse(localStorage.getItem('estudiantes')) || [];
-    setEstudiantes([...base, ...guardados]);
-  }, []);
+    };
 
-  const actualizarLocalStorage = (nuevos) => {
-    const baseLength = 3;
-    const soloNuevos = nuevos.slice(baseLength);
-    localStorage.setItem('estudiantes', JSON.stringify(soloNuevos));
-  };
+    fetchEstudiantes();
+  }, []);
 
   const handleEditar = (index) => {
     setSelectedIndex(index);
@@ -68,23 +40,69 @@ const Estudiantes = () => {
     setShowModal(true);
   };
 
-  const handleGuardar = () => {
-    const nuevos = [...estudiantes];
-    nuevos[selectedIndex] = form;
-    setEstudiantes(nuevos);
-    actualizarLocalStorage(nuevos);
-    setShowModal(false);
-    setConfirmDeleteIndex(null);
+  const handleGuardar = async () => {
+    try {
+      const payload = {
+        cedula: form.cedula,
+        nombres: form.nombres,
+        apellidos: form.apellidos,
+        correo: form.correo,
+        rol: form.rol,
+        conexion: form.conexion,
+      };
+
+      // ✅ Solo incluir contraseña si el usuario la cambió
+      if (newPassword) {
+        payload.contrasena = newPassword;
+      }
+
+      await api.put(`/usuarios/${form.id_usuario}`, payload);
+
+      const res = await api.get('/usuarios');
+      const estudiantesFiltrados = res.data.filter(u => u.rol === 'estudiante');
+      setEstudiantes(estudiantesFiltrados);
+
+      setShowModal(false);
+      setConfirmDeleteIndex(null);
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      console.error('Error al guardar estudiante:', error);
+    }
   };
 
-  const confirmarEliminar = (index) => {
-    const nuevos = [...estudiantes];
-    nuevos.splice(index, 1);
-    setEstudiantes(nuevos);
-    actualizarLocalStorage(nuevos);
+const confirmarEliminar = async (index) => {
+  try {
+    const id = estudiantes[index].id_usuario;
+
+    // ✅ 1. Consultar todas las relaciones Paciente-Estudiante
+    const { data: relaciones } = await api.get('/paciente-estudiante');
+
+    // ✅ 2. Filtrar las relaciones del estudiante que vamos a eliminar
+    const relacionesDelEstudiante = relaciones.filter(
+      (rel) => rel.id_estudiante === id
+    );
+
+    // ✅ 3. Eliminar cada relación encontrada
+    for (const rel of relacionesDelEstudiante) {
+      await api.delete(`/paciente-estudiante/${rel.id}`);
+    }
+
+    // ✅ 4. Eliminar finalmente el usuario
+    await api.delete(`/usuarios/${id}`);
+
+    // ✅ 5. Refrescar la lista de estudiantes
+    const res = await api.get('/usuarios');
+    const estudiantesFiltrados = res.data.filter(u => u.rol === 'estudiante');
+    setEstudiantes(estudiantesFiltrados);
+
     setShowModal(false);
     setConfirmDeleteIndex(null);
-  };
+  } catch (error) {
+    console.error('Error al eliminar estudiante:', error);
+  }
+};
+  
 
   const cancelarEliminar = () => {
     setConfirmDeleteIndex(null);
@@ -97,17 +115,13 @@ const Estudiantes = () => {
     });
   };
 
-  
-
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <Button variant="success" onClick={() => navigate('/agregar-estudiantes')}>
           Agregar Estudiantes
         </Button>
-        {/* Puedes agregar otros botones a la derecha si necesitas */}
       </div>
-
 
       <Table className="table-estudiantes">
         <thead className="table-light">
@@ -123,28 +137,25 @@ const Estudiantes = () => {
           </tr>
         </thead>
         <tbody>
-          {estudiantes
-            .filter(est => est.rol === 'estudiante')
-            .map((est, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{est.nombres}</td>
-                <td>{est.apellidos}</td>
-                <td>{est.cedula}</td>
-                <td>{est.correo}</td>
-                <td>{est.rol}</td>
-                <td>{est.conexion}</td>
-                <td>
-                  <Button variant="primary" size="sm" onClick={() => handleEditar(index)}>
-                    Editar
-                  </Button>
-                </td>
-              </tr>
+          {estudiantes.map((est, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{est.nombres}</td>
+              <td>{est.apellidos}</td>
+              <td>{est.cedula}</td>
+              <td>{est.correo}</td>
+              <td>{est.rol}</td>
+              <td>{est.conexion}</td>
+              <td>
+                <Button variant="primary" size="sm" onClick={() => handleEditar(index)}>
+                  Editar
+                </Button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>
 
-      {/* Modal edición */}
       <Modal show={showModal} onHide={() => { setShowModal(false); setConfirmDeleteIndex(null); }} centered>
         <Modal.Header closeButton>
           <Modal.Title>Editar Estudiante</Modal.Title>
@@ -163,12 +174,13 @@ const Estudiantes = () => {
 
               <Form.Label className="mt-3">Correo</Form.Label>
               <Form.Control name="correo" value={form.correo || ''} onChange={handleChange} />
-              
+
               <Form.Label className="mt-3">Contraseña</Form.Label>
               <div className="input-group">
                 <Form.Control
                   type={showPassword ? 'text' : 'password'}
-                  value={form.contrasena || ''}
+                  value=""
+                  placeholder="••••••••"
                   disabled
                 />
                 <Button variant="outline-secondary" onClick={() => setShowPassword(!showPassword)}>
@@ -178,7 +190,6 @@ const Estudiantes = () => {
                   Cambiar
                 </Button>
               </div>
-
 
               <Form.Label className="mt-3">Rol</Form.Label>
               <Form.Control name="rol" value={form.rol || ''} onChange={handleChange} disabled />
@@ -248,7 +259,8 @@ const Estudiantes = () => {
             variant="success"
             onClick={() => {
               if (newPassword === confirmPassword && newPassword !== '') {
-                setForm({ ...form, contrasena: newPassword });
+                setNewPassword(newPassword);
+                setForm({ ...form }); // No se guarda en form.contrasena directamente
                 setShowChangePassModal(false);
                 setNewPassword('');
                 setConfirmPassword('');
@@ -261,11 +273,8 @@ const Estudiantes = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </div>
   );
 };
 
-
 export default Estudiantes;
-

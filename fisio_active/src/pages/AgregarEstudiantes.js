@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Form, Alert } from 'react-bootstrap';
+import { Button, Table, Form, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axiosConfig';
 
 const SECTORES = ['Centro Norte', 'Sur', 'Norte', 'Valles', 'Occidental'];
-const PACIENTES_SIMULADOS = [
-  'Paciente 001', 'Paciente 002', 'Paciente 003', 'Paciente 004', 'Paciente 005',
-  'Paciente 006', 'Paciente 007', 'Paciente 008', 'Paciente 009', 'Paciente 010',
-  'Paciente 011', 'Paciente 012', 'Paciente 013', 'Paciente 014', 'Paciente 015',
-  'Paciente 016', 'Paciente 017', 'Paciente 018', 'Paciente 019', 'Paciente 020'
-];
 
 const AgregarEstudiantes = () => {
   const navigate = useNavigate();
@@ -18,10 +13,23 @@ const AgregarEstudiantes = () => {
   const [errorCantidad, setErrorCantidad] = useState('');
   const [sectorGlobal, setSectorGlobal] = useState('');
   const [mostrarContrasenas, setMostrarContrasenas] = useState(true);
+  const [alerta, setAlerta] = useState(null);
+  const [pacientes, setPacientes] = useState([]);
+  const [loadingPacientes, setLoadingPacientes] = useState(true);
 
   useEffect(() => {
-    const guardados = JSON.parse(localStorage.getItem('estudiantes')) || [];
-    setUltimoID(1000 + guardados.length);
+    const fetchPacientes = async () => {
+      try {
+        const { data } = await api.get('/pacientes');
+        setPacientes(data);
+      } catch (error) {
+        console.error('Error al cargar pacientes:', error);
+      } finally {
+        setLoadingPacientes(false);
+      }
+    };
+
+    fetchPacientes();
   }, []);
 
   const generarContrasena = () => {
@@ -48,8 +56,7 @@ const AgregarEstudiantes = () => {
     const hoy = new Date().toISOString().split('T')[0];
     const n = parseInt(cantidad);
 
-    const lista = Array.from({ length: n }, (_, i) => ({
-      estuid: `EST${ultimoID + i}`,
+    const lista = Array.from({ length: n }, () => ({
       nombres: '',
       apellidos: '',
       cedula: '',
@@ -58,7 +65,7 @@ const AgregarEstudiantes = () => {
       conexion: hoy,
       rol: 'estudiante',
       sector: '',
-      paciente: ''
+      id_paciente: ''
     }));
     setEstudiantes(lista);
   };
@@ -76,24 +83,46 @@ const AgregarEstudiantes = () => {
   };
 
   const asignarPacientesAleatorios = () => {
-    if (estudiantes.length > PACIENTES_SIMULADOS.length) {
+    if (estudiantes.length > pacientes.length) {
       alert('No hay suficientes pacientes únicos para asignar.');
       return;
     }
-    const pacientesDisponibles = [...PACIENTES_SIMULADOS].sort(() => 0.5 - Math.random());
+    const disponibles = [...pacientes].sort(() => 0.5 - Math.random());
     const actualizados = estudiantes.map((e, i) => ({
       ...e,
-      paciente: pacientesDisponibles[i]
+      id_paciente: disponibles[i]?.id_paciente || ''
     }));
     setEstudiantes(actualizados);
   };
 
-  const guardarTodos = () => {
-    const existentes = JSON.parse(localStorage.getItem('estudiantes')) || [];
-    const actualizados = [...existentes, ...estudiantes];
-    localStorage.setItem('estudiantes', JSON.stringify(actualizados));
-    alert('Estudiantes guardados exitosamente');
-    navigate('/estudiantes');
+  const guardarTodos = async () => {
+    try {
+      for (const est of estudiantes) {
+        const payload = {
+          nombres: est.nombres,
+          apellidos: est.apellidos,
+          cedula: est.cedula,
+          correo: est.correo,
+          contrasena: est.contrasena,
+          rol: est.rol,
+          conexion: est.conexion
+        };
+
+        const { data: usuarioCreado } = await api.post('/usuarios', payload);
+
+        if (est.id_paciente) {
+          await api.post('/paciente-estudiante', {
+            id_paciente: Number(est.id_paciente),
+            id_estudiante: usuarioCreado.id_usuario
+          });
+        }
+      }
+      setAlerta({ tipo: 'success', mensaje: 'Estudiantes creados exitosamente.' });
+      setTimeout(() => navigate('/estudiantes'), 1500);
+    } catch (error) {
+      console.error(error);
+      setAlerta({ tipo: 'danger', mensaje: 'Error al guardar estudiantes.' });
+    }
   };
 
   return (
@@ -103,6 +132,12 @@ const AgregarEstudiantes = () => {
       </Button>
 
       <h4>Registrar Múltiples Estudiantes</h4>
+
+      {alerta && (
+        <Alert variant={alerta.tipo} onClose={() => setAlerta(null)} dismissible>
+          {alerta.mensaje}
+        </Alert>
+      )}
 
       <Form.Group className="mb-3 w-25">
         <Form.Label>Cantidad de estudiantes</Form.Label>
@@ -127,7 +162,6 @@ const AgregarEstudiantes = () => {
 
       {estudiantes.length > 0 && (
         <div className="mb-3 d-flex align-items-center gap-2">
-
           <Form.Select
             className="w-auto"
             value={sectorGlobal}
@@ -139,16 +173,26 @@ const AgregarEstudiantes = () => {
             ))}
           </Form.Select>
 
-          <Button variant="warning" onClick={asignarPacientesAleatorios}>
-            Asignar pacientes aleatorios
+          <Button
+            variant="warning"
+            onClick={asignarPacientesAleatorios}
+            disabled={loadingPacientes}
+          >
+            {loadingPacientes ? (
+              <>
+                <Spinner animation="border" size="sm" /> Cargando...
+              </>
+            ) : (
+              "Asignar pacientes aleatorios"
+            )}
           </Button>
+
           <Button
             variant="outline-dark"
             onClick={() => setMostrarContrasenas(prev => !prev)}
           >
             {mostrarContrasenas ? 'Ocultar contraseñas' : 'Mostrar contraseñas'}
           </Button>
-
         </div>
       )}
 
@@ -158,7 +202,6 @@ const AgregarEstudiantes = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>ID</th>
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Cédula</th>
@@ -173,7 +216,6 @@ const AgregarEstudiantes = () => {
               {estudiantes.map((est, i) => (
                 <tr key={i}>
                   <td>{i + 1}</td>
-                  <td>{est.estuid}</td>
                   <td>
                     <Form.Control
                       value={est.nombres}
@@ -219,12 +261,14 @@ const AgregarEstudiantes = () => {
                   </td>
                   <td>
                     <Form.Select
-                      value={est.paciente}
-                      onChange={(e) => handleChange(i, 'paciente', e.target.value)}
+                      value={est.id_paciente || ''}
+                      onChange={(e) => handleChange(i, 'id_paciente', e.target.value)}
                     >
                       <option value="">—</option>
-                      {PACIENTES_SIMULADOS.map((p, idx) => (
-                        <option key={idx} value={p}>{p}</option>
+                      {pacientes.map((p) => (
+                        <option key={p.id_paciente} value={p.id_paciente}>
+                          {p.nombres} {p.apellidos}
+                        </option>
                       ))}
                     </Form.Select>
                   </td>

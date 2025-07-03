@@ -1,32 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const historiaClinicaController = require('../controllers/historiaclinica.controller');
+const pacienteController = require('../controllers/paciente.controller');
 const { verificarTokenMiddleware } = require('../middlewares/auth.middleware');
 
 // CRUD protegido
-router.post(  '/',  verificarTokenMiddleware,historiaClinicaController.crearHistoriaClinica);
 
-router.get( '/',verificarTokenMiddleware,historiaClinicaController.obtenerHistoriasClinicas);
+// Crear paciente
+router.post('/', verificarTokenMiddleware, pacienteController.crearPaciente);
 
-router.get('/:id',verificarTokenMiddleware,historiaClinicaController.obtenerHistoriaClinicaPorId);
+// Obtener todos los pacientes
+router.get('/', verificarTokenMiddleware, pacienteController.obtenerPacientes);
 
-router.put('/:id',verificarTokenMiddleware,historiaClinicaController.actualizarHistoriaClinica);
+// Obtener un paciente por ID
+router.get('/:id', verificarTokenMiddleware, pacienteController.obtenerPacientePorId);
 
-router.delete( '/:id', verificarTokenMiddleware,historiaClinicaController.eliminarHistoriaClinica);
+// Buscar pacientes por nombre o apellido
+router.get('/buscar/nombre/:nombre', verificarTokenMiddleware, pacienteController.obtenerPacientePorNombre);
 
-// Búsquedas específicas protegidas
+// Actualizar paciente por ID
+router.put('/:id', verificarTokenMiddleware, pacienteController.actualizarPaciente);
 
-// Buscar por paciente
-router.get('/paciente/:id_paciente',verificarTokenMiddleware, historiaClinicaController.obtenerHistoriasPorPaciente);
-
-// Buscar por estudiante
-router.get('/estudiante/:id_estudiante', verificarTokenMiddleware,historiaClinicaController.obtenerHistoriasPorEstudiante);
-
-// Buscar por sector
-router.get('/sector/:id_sector',verificarTokenMiddleware,historiaClinicaController.obtenerHistoriasPorSector);
-
-// Buscar por rango de fechas
-// Ejemplo: /api/historias-clinicas/rango-fechas?fechaInicio=2023-01-01&fechaFin=2023-12-31
-router.get('/rango-fechas',verificarTokenMiddleware,historiaClinicaController.obtenerHistoriasPorRangoFechas);
+// Eliminar paciente por ID
+router.delete('/:id', verificarTokenMiddleware, pacienteController.eliminarPaciente);
 
 module.exports = router;

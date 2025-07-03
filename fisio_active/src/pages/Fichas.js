@@ -13,7 +13,6 @@ const Fichas = () => {
   const [selectedFicha, setSelectedFicha] = useState(null);
   const [form, setForm] = useState({});
 
-  // ✅ Obtener las fichas y listas de pacientes y estudiantes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,6 +25,8 @@ const Fichas = () => {
         const estudiantesOnly = usuariosRes.data.filter(
           (u) => u.rol === 'estudiante'
         );
+
+       
 
         setFichas(fichasRes.data);
         setPacientes(pacientesRes.data);
@@ -42,8 +43,8 @@ const Fichas = () => {
     setSelectedFicha(ficha);
     setForm({
       id_historia: ficha.id_historia,
-      paciente: ficha.id_paciente,
-      estudiante: ficha.id_estudiante,
+      paciente: ficha.id_paciente?.toString() || '',
+      estudiante: ficha.id_estudiante?.toString() || '',
       fecha_registro: ficha.fecha_evaluacion?.split('T')[0] || '',
       numero_atencion: ficha.numero_atencion || '',
       tiene_diagnostico: ficha.estado ? 'true' : 'false',
@@ -55,8 +56,8 @@ const Fichas = () => {
     try {
       const payload = {
         ...selectedFicha,
-        id_paciente: form.paciente,
-        id_estudiante: form.estudiante,
+        id_paciente: Number(form.paciente),
+        id_estudiante: Number(form.estudiante),
         fecha_evaluacion: form.fecha_registro,
         numero_atencion: Number(form.numero_atencion),
         estado: form.tiene_diagnostico === 'true',
@@ -64,7 +65,6 @@ const Fichas = () => {
 
       await api.put(`/historias-clinicas/${selectedFicha.id_historia}`, payload);
 
-      // Volver a cargar la lista
       const { data } = await api.get('/historias-clinicas');
       setFichas(data);
       setShowModal(false);
@@ -80,14 +80,15 @@ const Fichas = () => {
     });
   };
 
-  // ✅ Funciones para buscar nombres por id
   const obtenerNombrePaciente = (id) => {
-    const paciente = pacientes.find((p) => p.id_paciente === id);
-    return paciente ? `${paciente.nombres} ${paciente.apellidos}` : id;
+    const paciente = pacientes.find((p) => Number(p.id_paciente) === Number(id));
+    return paciente
+      ? `${paciente.nombres} ${paciente.apellidos}`
+      : id;
   };
 
   const obtenerNombreEstudiante = (id) => {
-    const estudiante = estudiantes.find((e) => e.id_usuario === id);
+    const estudiante = estudiantes.find((e) => Number(e.id_usuario) === Number(id));
     return estudiante
       ? `${estudiante.nombres} ${estudiante.apellidos}`
       : id;
@@ -96,10 +97,9 @@ const Fichas = () => {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Fichas Registradas</h4>
-        <Button variant="success" onClick={() => navigate('/agendar')}>
-          + Agregar Ficha
-        </Button>
+        <Button variant="success" className="btn-ficha">+ Agregar Ficha</Button>
+        <Button variant="primary" className="btn-ficha">Enviar Fichas</Button>
+        <Button variant="outline-primary" className="btn-ficha">Descargar PDF</Button>
       </div>
 
       <Table className="table-fichas">
@@ -116,7 +116,7 @@ const Fichas = () => {
           </tr>
         </thead>
         <tbody>
-          {fichas.map((ficha, index) => (
+          {pacientes.length > 0 && fichas.map((ficha, index) => (
             <tr key={ficha.id_historia}>
               <td>{index + 1}</td>
               <td>{ficha.id_historia}</td>

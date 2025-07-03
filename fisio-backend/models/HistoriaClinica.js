@@ -141,6 +141,7 @@ const HistoriaClinica = sequelize.define('HistoriaClinica', {
   timestamps: false
 });
 
+
 module.exports = HistoriaClinica;
 // This code defines a Sequelize model for a clinical history in a healthcare application.
 // The model includes various fields such as patient ID, student ID, age, weight, height,
