@@ -1,3 +1,5 @@
 /fisio_active/node_modules/.cache
 /fisio_active/node_modules/.cache
 /fisio_active/node_modules
+fisio_active/node_modules/.cache/.eslintcache
+fisio-backend/.env
