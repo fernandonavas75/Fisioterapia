@@ -8,16 +8,21 @@ import Fichas from './pages/Fichas';
 import Estudiantes from './pages/Estudiantes';
 import Informe from './pages/Informe';
 import Layout from './components/Layout';
-import AgendarFicha from './pages/AgendarFicha'; // o como se llame tu vista
+import AgendarFicha from './pages/AgendarFicha';
 import AgregarEstudiantes from './pages/AgregarEstudiantes';
 
+// NUEVO: Página informativa de inicio
+import Inicio from './pages/Inicio';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Login */}
-        <Route path="/" element={<Login />} />
+        {/* Página pública inicial */}
+        <Route path="/" element={<Inicio />} />
+
+        {/* Login separado */}
+        <Route path="/login" element={<Login />} />
 
         {/* Dashboards con layout */}
         <Route path="/est" element={<Layout><EstDashboard /></Layout>} />
