@@ -1,64 +1,96 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // al inicio del archivo
+import { useNavigate } from 'react-router-dom';
+import api from '../api/axiosConfig';
 import '../styles/Fichas.css';
-
 
 const Fichas = () => {
   const navigate = useNavigate();
-  const [fichas, setFichas] = useState([
-    {
-      id: 'FIC001',
-      paciente: 'Lucía Pérez',
-      estudiante: 'Andrea López',
-      fecha_registro: '2025-06-06',
-      numero_atencion: 1,
-      tiene_diagnostico: true
-    },
-    {
-      id: 'FIC002',
-      paciente: 'Mateo Rodríguez',
-      estudiante: 'Carlos García',
-      fecha_registro: '2025-06-05',
-      numero_atencion: 1,
-      tiene_diagnostico: false
-    },
-    {
-      id: 'FIC003',
-      paciente: 'Lucía Pérez',
-      estudiante: 'Andrea López',
-      fecha_registro: '2025-06-07',
-      numero_atencion: 2,
-      tiene_diagnostico: true
-    }
-  ]);
-
+  const [fichas, setFichas] = useState([]);
+  const [pacientes, setPacientes] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedFicha, setSelectedFicha] = useState(null);
   const [form, setForm] = useState({});
 
-  const handleEditar = (index) => {
-    setSelectedIndex(index);
-    setForm({ ...fichas[index] });
+  // ✅ Obtener las fichas y listas de pacientes y estudiantes
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [fichasRes, pacientesRes, usuariosRes] = await Promise.all([
+          api.get('/historias-clinicas'),
+          api.get('/pacientes'),
+          api.get('/usuarios')
+        ]);
+
+        const estudiantesOnly = usuariosRes.data.filter(
+          (u) => u.rol === 'estudiante'
+        );
+
+        setFichas(fichasRes.data);
+        setPacientes(pacientesRes.data);
+        setEstudiantes(estudiantesOnly);
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleEditar = (ficha) => {
+    setSelectedFicha(ficha);
+    setForm({
+      id_historia: ficha.id_historia,
+      paciente: ficha.id_paciente,
+      estudiante: ficha.id_estudiante,
+      fecha_registro: ficha.fecha_evaluacion?.split('T')[0] || '',
+      numero_atencion: ficha.numero_atencion || '',
+      tiene_diagnostico: ficha.estado ? 'true' : 'false',
+    });
     setShowModal(true);
   };
 
-  const handleGuardar = () => {
-    const actualizadas = [...fichas];
-    actualizadas[selectedIndex] = form;
-    setFichas(actualizadas);
-    setShowModal(false);
+  const handleGuardar = async () => {
+    try {
+      const payload = {
+        ...selectedFicha,
+        id_paciente: form.paciente,
+        id_estudiante: form.estudiante,
+        fecha_evaluacion: form.fecha_registro,
+        numero_atencion: Number(form.numero_atencion),
+        estado: form.tiene_diagnostico === 'true',
+      };
+
+      await api.put(`/historias-clinicas/${selectedFicha.id_historia}`, payload);
+
+      // Volver a cargar la lista
+      const { data } = await api.get('/historias-clinicas');
+      setFichas(data);
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error al actualizar ficha:', error);
+    }
   };
 
   const handleChange = (e) => {
-    const value = e.target.name === 'tiene_diagnostico'
-      ? e.target.value === 'true'
-      : e.target.value;
-
     setForm({
       ...form,
-      [e.target.name]: value
+      [e.target.name]: e.target.value
     });
+  };
+
+  // ✅ Funciones para buscar nombres por id
+  const obtenerNombrePaciente = (id) => {
+    const paciente = pacientes.find((p) => p.id_paciente === id);
+    return paciente ? `${paciente.nombres} ${paciente.apellidos}` : id;
+  };
+
+  const obtenerNombreEstudiante = (id) => {
+    const estudiante = estudiantes.find((e) => e.id_usuario === id);
+    return estudiante
+      ? `${estudiante.nombres} ${estudiante.apellidos}`
+      : id;
   };
 
   return (
@@ -66,17 +98,18 @@ const Fichas = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Fichas Registradas</h4>
         <Button variant="success" onClick={() => navigate('/agendar')}>
-            + Agregar Ficha
+          + Agregar Ficha
         </Button>
       </div>
+
       <Table className="table-fichas">
         <thead>
           <tr>
             <th>#</th>
-            <th>ID Ficha</th>
+            <th>ID Historia</th>
             <th>Paciente</th>
             <th>Estudiante</th>
-            <th>Fecha de Registro</th>
+            <th>Fecha Evaluación</th>
             <th>N. Atención</th>
             <th>Diagnóstico</th>
             <th>Acciones</th>
@@ -84,20 +117,23 @@ const Fichas = () => {
         </thead>
         <tbody>
           {fichas.map((ficha, index) => (
-            <tr key={index}>
+            <tr key={ficha.id_historia}>
               <td>{index + 1}</td>
-              <td>{ficha.id}</td>
-              <td>{ficha.paciente}</td>
-              <td>{ficha.estudiante}</td>
-              <td>{ficha.fecha_registro}</td>
-              <td>{ficha.numero_atencion}</td>
+              <td>{ficha.id_historia}</td>
+              <td>{obtenerNombrePaciente(ficha.id_paciente)}</td>
+              <td>{obtenerNombreEstudiante(ficha.id_estudiante)}</td>
+              <td>{ficha.fecha_evaluacion?.split('T')[0]}</td>
+              <td>{ficha.numero_atencion || '-'}</td>
               <td>
-                <span className={`badge-diagnostico ${ficha.tiene_diagnostico ? 'badge-asociado' : 'badge-sin'}`}>
-                  {ficha.tiene_diagnostico ? 'Asociado' : 'Sin diagnóstico'}
+                <span className={`badge-diagnostico ${ficha.estado ? 'badge-asociado' : 'badge-sin'}`}>
+                  {ficha.estado ? 'Asociado' : 'Sin diagnóstico'}
                 </span>
               </td>
               <td>
-                <button className="btn-editar" onClick={() => handleEditar(index)}>
+                <button
+                  className="btn-editar"
+                  onClick={() => handleEditar(ficha)}
+                >
                   Editar
                 </button>
               </td>
@@ -106,7 +142,6 @@ const Fichas = () => {
         </tbody>
       </Table>
 
-      {/* Modal de edición */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Editar Ficha</Modal.Title>
@@ -114,33 +149,64 @@ const Fichas = () => {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>ID Ficha</Form.Label>
-              <Form.Control name="id" value={form.id || ''} onChange={handleChange} />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
               <Form.Label>Paciente</Form.Label>
-              <Form.Control name="paciente" value={form.paciente || ''} onChange={handleChange} />
+              <Form.Select
+                name="paciente"
+                value={form.paciente || ''}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione un paciente</option>
+                {pacientes.map((p) => (
+                  <option key={p.id_paciente} value={p.id_paciente}>
+                    {p.nombres} {p.apellidos}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Estudiante</Form.Label>
-              <Form.Control name="estudiante" value={form.estudiante || ''} onChange={handleChange} />
+              <Form.Select
+                name="estudiante"
+                value={form.estudiante || ''}
+                onChange={handleChange}
+              >
+                <option value="">Seleccione un estudiante</option>
+                {estudiantes.map((e) => (
+                  <option key={e.id_usuario} value={e.id_usuario}>
+                    {e.nombres} {e.apellidos}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Fecha de Registro</Form.Label>
-              <Form.Control name="fecha_registro" type="date" value={form.fecha_registro || ''} onChange={handleChange} />
+              <Form.Control
+                name="fecha_registro"
+                type="date"
+                value={form.fecha_registro || ''}
+                onChange={handleChange}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Número de Atención</Form.Label>
-              <Form.Control name="numero_atencion" type="number" value={form.numero_atencion || ''} onChange={handleChange} />
+              <Form.Control
+                name="numero_atencion"
+                type="number"
+                value={form.numero_atencion || ''}
+                onChange={handleChange}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Diagnóstico</Form.Label>
-              <Form.Select name="tiene_diagnostico" value={form.tiene_diagnostico} onChange={handleChange}>
+              <Form.Select
+                name="tiene_diagnostico"
+                value={form.tiene_diagnostico}
+                onChange={handleChange}
+              >
                 <option value="true">Tiene diagnóstico</option>
                 <option value="false">Sin diagnóstico</option>
               </Form.Select>
