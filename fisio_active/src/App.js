@@ -8,9 +8,10 @@ import Fichas from './pages/Fichas';
 import Estudiantes from './pages/Estudiantes';
 import Informe from './pages/Informe';
 import Layout from './components/Layout';
-import AgendarFicha from './pages/AgendarFicha';
+import AgendarFicha from './pages/AgendarFicha'; // o como se llame tu vista
 import AgregarEstudiantes from './pages/AgregarEstudiantes';
 
+import DetallePaciente from './pages/DetallePaciente';
 // NUEVO: Página informativa de inicio
 import Inicio from './pages/Inicio';
 
@@ -30,6 +31,7 @@ function App() {
 
         {/* Rutas comunes y por rol, todas con layout */}
         <Route path="/pacientes" element={<Layout><Pacientes /></Layout>} />
+        <Route path="/pacientes/:id" element={<Layout><DetallePaciente /></Layout>} />
         <Route path="/fichas" element={<Layout><Fichas /></Layout>} />
         <Route path="/estudiantes" element={<Layout><Estudiantes /></Layout>} />
         <Route path="/informe" element={<Layout><Informe /></Layout>} />

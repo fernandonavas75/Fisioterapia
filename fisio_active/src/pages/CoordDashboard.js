@@ -17,21 +17,6 @@ const CoordDashboard = () => {
       <div className="row g-4 mb-4">
         <div className="col-md-3">
           <div
-            className="card text-bg-primary"
-            onClick={() => (window.location.href = '/pacientes')}
-            style={{ cursor: 'pointer' }}
-          >
-            <div className="card-body text-center">
-              <i className="bi bi-people-fill display-5"></i>
-              <h5 className="card-title">Pacientes</h5>
-              <h2 style={{ fontWeight: 700 }}>20</h2>
-              <span className="btn btn-light btn-sm mt-1">Ver todos</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-3">
-          <div
             className="card text-bg-success"
             onClick={() => (window.location.href = '/estudiantes')}
             style={{ cursor: 'pointer' }}
@@ -47,13 +32,28 @@ const CoordDashboard = () => {
 
         <div className="col-md-3">
           <div
+            className="card text-bg-primary"
+            onClick={() => (window.location.href = '/pacientes')}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="card-body text-center">
+              <i className="bi bi-people-fill display-5"></i>
+              <h5 className="card-title">Pacientes</h5>
+              <h2 style={{ fontWeight: 700 }}>20</h2>
+              <span className="btn btn-light btn-sm mt-1">Ver todos</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <div
             className="card text-bg-warning"
             onClick={() => (window.location.href = '/fichas')}
             style={{ cursor: 'pointer' }}
           >
             <div className="card-body text-center">
               <i className="bi bi-journal-text display-5"></i>
-              <h5 className="card-title">Historias clínicas</h5>
+              <h5 className="card-title">Fichas</h5>
               <h2 style={{ fontWeight: 700 }}>12</h2>
               <span className="btn btn-light btn-sm mt-1">Ver todas</span>
             </div>
@@ -68,7 +68,7 @@ const CoordDashboard = () => {
           >
             <div className="card-body text-center">
               <i className="bi bi-exclamation-circle display-5"></i>
-              <h5 className="card-title">Sin asignar</h5>
+              <h5 className="card-title">Reportes</h5>
               <h2 style={{ fontWeight: 700 }}>3</h2>
               <span className="btn btn-light btn-sm mt-1">Asignar</span>
             </div>

@@ -17,6 +17,7 @@ const AgregarEstudiantes = () => {
   const [ultimoID, setUltimoID] = useState(1000);
   const [errorCantidad, setErrorCantidad] = useState('');
   const [sectorGlobal, setSectorGlobal] = useState('');
+  const [mostrarContrasenas, setMostrarContrasenas] = useState(true);
 
   useEffect(() => {
     const guardados = JSON.parse(localStorage.getItem('estudiantes')) || [];
@@ -44,17 +45,19 @@ const AgregarEstudiantes = () => {
     const error = validarCantidad(cantidad);
     setErrorCantidad(error);
     if (error) return;
-
+    const hoy = new Date().toISOString().split('T')[0];
     const n = parseInt(cantidad);
+
     const lista = Array.from({ length: n }, (_, i) => ({
       estuid: `EST${ultimoID + i}`,
-      nombre: '',
-      apellido: '',
+      nombres: '',
+      apellidos: '',
       cedula: '',
       correo: '',
+      contrasena: generarContrasena(),
+      conexion: hoy,
+      rol: 'estudiante',
       sector: '',
-      semestre: '',
-      password: generarContrasena(),
       paciente: ''
     }));
     setEstudiantes(lista);
@@ -87,12 +90,7 @@ const AgregarEstudiantes = () => {
 
   const guardarTodos = () => {
     const existentes = JSON.parse(localStorage.getItem('estudiantes')) || [];
-    const nuevos = estudiantes.map(est => ({
-      ...est,
-      ultimaConexion: '—',
-      fichas: 0
-    }));
-    const actualizados = [...existentes, ...nuevos];
+    const actualizados = [...existentes, ...estudiantes];
     localStorage.setItem('estudiantes', JSON.stringify(actualizados));
     alert('Estudiantes guardados exitosamente');
     navigate('/estudiantes');
@@ -100,6 +98,10 @@ const AgregarEstudiantes = () => {
 
   return (
     <div className="container mt-4">
+      <Button variant="outline-secondary" className="mb-3" onClick={() => navigate('/estudiantes')}>
+        ← Volver a Estudiantes
+      </Button>
+
       <h4>Registrar Múltiples Estudiantes</h4>
 
       <Form.Group className="mb-3 w-25">
@@ -125,6 +127,7 @@ const AgregarEstudiantes = () => {
 
       {estudiantes.length > 0 && (
         <div className="mb-3 d-flex align-items-center gap-2">
+
           <Form.Select
             className="w-auto"
             value={sectorGlobal}
@@ -135,9 +138,17 @@ const AgregarEstudiantes = () => {
               <option key={i} value={s}>{s}</option>
             ))}
           </Form.Select>
+
           <Button variant="warning" onClick={asignarPacientesAleatorios}>
             Asignar pacientes aleatorios
           </Button>
+          <Button
+            variant="outline-dark"
+            onClick={() => setMostrarContrasenas(prev => !prev)}
+          >
+            {mostrarContrasenas ? 'Ocultar contraseñas' : 'Mostrar contraseñas'}
+          </Button>
+
         </div>
       )}
 
@@ -148,48 +159,74 @@ const AgregarEstudiantes = () => {
               <tr>
                 <th>#</th>
                 <th>ID</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
                 <th>Cédula</th>
                 <th>Correo</th>
                 <th>Sector</th>
-                <th>Semestre</th>
                 <th>Contraseña</th>
                 <th>Paciente</th>
               </tr>
             </thead>
+
             <tbody>
               {estudiantes.map((est, i) => (
                 <tr key={i}>
                   <td>{i + 1}</td>
                   <td>{est.estuid}</td>
                   <td>
-                    <Form.Control value={est.nombre} onChange={(e) => handleChange(i, 'nombre', e.target.value)} />
-                  </td>
-                  <td>
-                    <Form.Control value={est.apellido} onChange={(e) => handleChange(i, 'apellido', e.target.value)} />
-                  </td>
-                  <td>
-                    <Form.Control value={est.cedula} onChange={(e) => handleChange(i, 'cedula', e.target.value)} />
-                  </td>
-                  <td>
-                    <Form.Control value={est.correo} onChange={(e) => handleChange(i, 'correo', e.target.value)} />
-                  </td>
-                  <td>
-                    <Form.Control value={est.sector} onChange={(e) => handleChange(i, 'sector', e.target.value)} />
-                  </td>
-                  <td>
                     <Form.Control
-                      type="number"
-                      value={est.semestre}
-                      onChange={(e) => handleChange(i, 'semestre', e.target.value)}
+                      value={est.nombres}
+                      onChange={(e) => handleChange(i, 'nombres', e.target.value)}
                     />
                   </td>
                   <td>
-                    <Form.Control value={est.password} onChange={(e) => handleChange(i, 'password', e.target.value)} />
+                    <Form.Control
+                      value={est.apellidos}
+                      onChange={(e) => handleChange(i, 'apellidos', e.target.value)}
+                    />
                   </td>
                   <td>
-                    <Form.Control value={est.paciente} onChange={(e) => handleChange(i, 'paciente', e.target.value)} />
+                    <Form.Control
+                      value={est.cedula}
+                      onChange={(e) => handleChange(i, 'cedula', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <Form.Control
+                      type="email"
+                      value={est.correo}
+                      onChange={(e) => handleChange(i, 'correo', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <Form.Select
+                      value={est.sector}
+                      onChange={(e) => handleChange(i, 'sector', e.target.value)}
+                    >
+                      <option value="">—</option>
+                      {SECTORES.map((s, idx) => (
+                        <option key={idx} value={s}>{s}</option>
+                      ))}
+                    </Form.Select>
+                  </td>
+                  <td>
+                    <Form.Control
+                      type={mostrarContrasenas ? 'text' : 'password'}
+                      value={est.contrasena}
+                      onChange={(e) => handleChange(i, 'contrasena', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <Form.Select
+                      value={est.paciente}
+                      onChange={(e) => handleChange(i, 'paciente', e.target.value)}
+                    >
+                      <option value="">—</option>
+                      {PACIENTES_SIMULADOS.map((p, idx) => (
+                        <option key={idx} value={p}>{p}</option>
+                      ))}
+                    </Form.Select>
                   </td>
                 </tr>
               ))}
