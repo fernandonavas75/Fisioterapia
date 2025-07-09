@@ -1,6 +1,6 @@
 import { hasFormSubmit } from "@testing-library/user-event/dist/utils";
 
-export default function FormAntecedentesPersonales({values,onChange,onClose,onNext}){
+export default function FormAntecedentesPersonales({values,onChange,onClose,onNext,onPrev}){
     const handle = (e) =>{
         const {name,value}=e.target;
         onchange({[name]:value});
