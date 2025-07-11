@@ -18,7 +18,7 @@ const informeFinalRoutes = require('./routes/informefinal.routes');
 const firmasConsentimientosRoutes = require('./routes/firmasconsentimientos.routes');
 const pacienteEstudianteRoutes = require('./routes/pacienteestudiante.routes');
 const pacienteSectorRoutes = require('./routes/pacientesector.routes');
-const openaiRoutes = require('./routes/openai.routes'); // Importar las rutas de OpenAI
+const openaiRoutes = require('./routes/openaiRoutes'); // Importar las rutas de OpenAI
 
 // Configuración de la aplicación Express
 const app = express();
