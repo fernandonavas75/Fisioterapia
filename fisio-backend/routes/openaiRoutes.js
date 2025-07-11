@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/uploadMiddleware');
-const { generarSugerenciasMedicas } = require('../controllers/openaiController');
+const upload = require('../middlewares/upload.middleware');
+const { generarSugerenciasMedicas } = require('../controllers/openai.controller');
 
 router.post('/sugerencias', upload.single('archivo'), generarSugerenciasMedicas);
 
