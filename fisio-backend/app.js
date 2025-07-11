@@ -18,6 +18,9 @@ const informeFinalRoutes = require('./routes/informefinal.routes');
 const firmasConsentimientosRoutes = require('./routes/firmasconsentimientos.routes');
 const pacienteEstudianteRoutes = require('./routes/pacienteestudiante.routes');
 const pacienteSectorRoutes = require('./routes/pacientesector.routes');
+const openaiRoutes = require('./routes/openai.routes'); // Importar las rutas de OpenAI
+
+// Configuración de la aplicación Express
 const app = express();
 
 app.use(cors());
@@ -37,6 +40,7 @@ app.use('/api/informes-finales', informeFinalRoutes);
 app.use('/api/firmas-consentimientos', firmasConsentimientosRoutes);
 app.use('/api/paciente-estudiante', pacienteEstudianteRoutes);
 app.use('/api/paciente-sector', pacienteSectorRoutes);
+app.use('/api/openai', openaiRoutes); // Usar las rutas de OpenAI
 // Ruta 404
 app.use((req, res) => {
   res.status(404).json({
