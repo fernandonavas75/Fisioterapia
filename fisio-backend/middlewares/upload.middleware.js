@@ -7,12 +7,12 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    if(ext !== '.json') {
-        return cb(new Error('Only JSON files are allowed'), false);
-    }
-    cb(null, true);
+  const ext = path.extname(file.originalname);
+  if (ext !== '.json') {
+    return cb(new Error('Solo se permiten archivos .json'), false);
+  }
+  cb(null, true);
 };
-const upload = multer({ storage, fileFilter });
 
+const upload = multer({ storage, fileFilter });
 module.exports = upload;
