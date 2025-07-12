@@ -14,7 +14,7 @@ const generarSugerenciasMedicas = async (req, res) => {
     const prompt = `Actúa como un fisioterapeuta. Analiza el siguiente historial clínico en JSON:\n\n${JSON.stringify(jsonData, null, 2)}\n\nProporciona recomendaciones clínicas detalladas.`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 500,
     });
