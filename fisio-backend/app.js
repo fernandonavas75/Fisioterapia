@@ -20,7 +20,7 @@ const firmasConsentimientosRoutes = require('./routes/firmasconsentimientos.rout
 const pacienteEstudianteRoutes = require('./routes/pacienteestudiante.routes');
 const pacienteSectorRoutes = require('./routes/pacientesector.routes');
 const openaiRoutes = require('./routes/openaiRoutes'); // Importar las rutas de OpenAI
-
+const fichaCompletaRoutes = require('./routes/fichaCompleta.routes');
 // Configuración de la aplicación Express
 const app = express();
 
@@ -42,6 +42,7 @@ app.use('/api/firmas-consentimientos', firmasConsentimientosRoutes);
 app.use('/api/paciente-estudiante', pacienteEstudianteRoutes);
 app.use('/api/paciente-sector', pacienteSectorRoutes);
 app.use('/api/openai', openaiRoutes); // Usar las rutas de OpenAI
+app.use('/api/ficha-completa', fichaCompletaRoutes);
 // Ruta 404
 app.use((req, res) => {
   res.status(404).json({
