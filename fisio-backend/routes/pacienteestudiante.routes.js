@@ -10,4 +10,5 @@ router.get('/:id', verificarTokenMiddleware, pacienteEstudianteController.obtene
 router.put('/:id', verificarTokenMiddleware, pacienteEstudianteController.actualizar);
 router.delete('/:id', verificarTokenMiddleware, pacienteEstudianteController.eliminar);
 
+router.get('/por-paciente/:id', verificarTokenMiddleware, pacienteEstudianteController.obtenerEstudiantePorPaciente)
 module.exports = router;

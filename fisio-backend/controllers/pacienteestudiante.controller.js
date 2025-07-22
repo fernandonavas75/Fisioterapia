@@ -70,3 +70,22 @@ exports.eliminar = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al eliminar la asignación' });
   }
 };
+
+//Nueva funcion buscar estudiante por id_paciente
+
+exports.obtenerEstudiantePorPaciente = async (req, res) => {
+  const {id} = req.params;
+  try {
+    const relacion = await PacienteEstudiante.findOne({
+      where: { id_paciente: id },
+      attributes: ['id_estudiante','id_paciente'],
+    });
+    if (!relacion) {
+      return res.status(404).json({ mensaje: 'No se encontró estudiante para el paciente especificado' });
+    }
+    res.json(relacion);
+  }catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al buscar estudiante por paciente' });
+  }
+};
