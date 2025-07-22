@@ -1,3 +1,4 @@
+// controllers/fichaCompleta.controller.js
 const { HistoriaClinica, Antecedentes, EvaluacionPostural, EvaluacionFuncional, FuerzaMuscular, InformeFinal, Seguimiento, FirmasConsentimientos } = require('../models');
 
 exports.crearFichaCompleta = async (req, res) => {
@@ -13,7 +14,7 @@ exports.crearFichaCompleta = async (req, res) => {
       edad: datos.edad,
       estatura: datos.estatura,
       fechaNacimiento: new Date(datos.fechaNacimiento),
-      fechaEvaluacion: new Date(datos.fecha_evaluacion).toISOString(),
+      fecha_evaluacion: new Date(datos.fecha_evaluacion),
       genero: datos.genero,
       escuela: datos.escuela,
       grado: datos.grado,
