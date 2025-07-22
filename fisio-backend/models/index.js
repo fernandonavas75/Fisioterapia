@@ -3,6 +3,14 @@ const Paciente = require('./Paciente');
 const HistoriaClinica = require('./HistoriaClinica');
 const Sector = require('./Sector');
 
+const Antecedentes = require('./Antecedentes');
+const EvaluacionPostural = require('./EvaluacionPostural');
+const EvaluacionFuncional = require('./EvaluacionFuncional');
+const FuerzaMuscular = require('./FuerzaMuscular');
+const InformeFinal = require('./InformeFinal');
+const Seguimiento = require('./Seguimiento');
+const FirmasConsentimientos = require('./FirmasConsentimientos');
+
 // RELACIONES
 
 // HistoriaClinica pertenece a Paciente
@@ -39,5 +47,12 @@ module.exports = {
   Usuario,
   Paciente,
   HistoriaClinica,
-  Sector
+  Sector,
+  Antecedentes,
+  EvaluacionPostural,
+  EvaluacionFuncional,
+  FuerzaMuscular,
+  InformeFinal,
+  Seguimiento,
+  FirmasConsentimientos
 };
