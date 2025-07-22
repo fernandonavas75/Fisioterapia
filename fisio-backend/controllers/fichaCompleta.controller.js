@@ -6,14 +6,14 @@ exports.crearFichaCompleta = async (req, res) => {
   try {
     // Crear Historia Clínica
     const historia = await HistoriaClinica.create({
-      id_paciente: datos.id_paciente,                // <-- AÑADIDO
-      id_estudiante: datos.id_estudiante,            // <-- AÑADIDO
+      id_paciente: new Number(datos.id_paciente),                // <-- AÑADIDO
+      id_estudiante: new Number(datos.id_estudiante),            // <-- AÑADIDO
       nombres: datos.nombres,
       apellidos: datos.apellidos,
       edad: datos.edad,
       estatura: datos.estatura,
-      fechaNacimiento: datos.fechaNacimiento,
-      fechaEvaluacion: datos.fecha_evaluacion,
+      fechaNacimiento: new Date(datos.fechaNacimiento),
+      fechaEvaluacion: new Date(datos.fecha_evaluacion),
       genero: datos.genero,
       escuela: datos.escuela,
       grado: datos.grado,
