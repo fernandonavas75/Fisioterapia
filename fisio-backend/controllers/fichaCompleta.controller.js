@@ -13,7 +13,7 @@ exports.crearFichaCompleta = async (req, res) => {
       edad: datos.edad,
       estatura: datos.estatura,
       fechaNacimiento: datos.fechaNacimiento,
-      fechaEvaluacion: datos.fechaEvaluacion,
+      fechaEvaluacion: datos.fecha_evaluacion,
       genero: datos.genero,
       escuela: datos.escuela,
       grado: datos.grado,
