@@ -2,7 +2,7 @@
 const HistoriaClinica = require('../models/HistoriaClinica');
 const EvaluacionPostural = require('../models/EvaluacionPostural');
 const FuerzaMuscular = require('../models/FuerzaMuscular');
-const PruebasFuncionales = require('../models/PruebasFuncionales');
+
 const Seguimiento = require('../models/Seguimiento');
 const { Op } = require('sequelize');
 
@@ -50,13 +50,7 @@ exports.crearFichaCompleta = async (req, res) => {
       ...req.body.tablaFuerzaMuscular
     });
 
-    // Crear Pruebas Funcionales
-    await PruebasFuncionales.create({
-      id_historia: historia.id_historia,
-      test_adams: req.body.testAdams,
-      test_jack: req.body.testJack,
-      otras_pruebas: req.body.otrasPruebas
-    });
+  
 
     // Crear Seguimiento 1
     await Seguimiento.create({
