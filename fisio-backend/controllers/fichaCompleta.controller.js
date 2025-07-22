@@ -13,7 +13,7 @@ exports.crearFichaCompleta = async (req, res) => {
       edad: datos.edad,
       estatura: datos.estatura,
       fechaNacimiento: new Date(datos.fechaNacimiento),
-      fechaEvaluacion: new Date(datos.fecha_evaluacion),
+      fechaEvaluacion: new Date(datos.fecha_evaluacion).toISOString(),
       genero: datos.genero,
       escuela: datos.escuela,
       grado: datos.grado,
