@@ -1,62 +1,74 @@
-const { HistoriaClinica, Antecedentes, EvaluacionPostural, EvaluacionFuncional, FuerzaMuscular, InformeFinal, Seguimiento, FirmasConsentimientos } = require('../models');
+// controllers/fichaCompleta.controller.js
+const HistoriaClinica = require('../models/HistoriaClinica');
+const EvaluacionPostural = require('../models/EvaluacionPostural');
+const FuerzaMuscular = require('../models/FuerzaMuscular');
+const PruebasFuncionales = require('../models/PruebasFuncionales');
+const Seguimiento = require('../models/Seguimiento');
+const { Op } = require('sequelize');
 
 exports.crearFichaCompleta = async (req, res) => {
-  const datos = req.body;
-
   try {
-    // Crear Historia Clínica
+    console.log('JSON recibido:', req.body);
+
+    // Crear la Historia Clínica
     const historia = await HistoriaClinica.create({
-      nombres: datos.nombres,
-      apellidos: datos.apellidos,
-      edad: datos.edad,
-      estatura: datos.estatura,
-      fechaNacimiento: datos.fechaNacimiento,
-      fechaEvaluacion: datos.fechaEvaluacion,
-      genero: datos.genero,
-      escuela: datos.escuela,
-      grado: datos.grado,
-      nombresTutor: datos.nombresTutor,
-      telefono_tutor: datos.telefono_tutor,
-      correo_tutor: datos.correo_tutor
+      id_paciente: Number(req.body.id_paciente), // <-- Asegurarse que es número
+      id_estudiante: Number(req.body.id_estudiante),
+      fecha_evaluacion: req.body.fecha_evaluacion,
+      edad: req.body.edad,
+      peso: req.body.peso,
+      estatura: req.body.estatura,
+      escuela: req.body.escuela,
+      grado: req.body.grado,
+      nombres_tutor: req.body.nombresTutor,
+      telefono_tutor: req.body.telefono_tutor,
+      correo_tutor: req.body.correo_tutor,
+      objetivos: req.body.objetivos,
+      ejercicios_fortalecimiento: req.body.fortalecimiento,
+      ejercicios_estiramiento: req.body.estiramiento,
+      reeducacion_postural: req.body.reeducacionPostural,
+      otras_tecnicas: req.body.otrasTecnicas,
+      uso_calzado_adecuado: req.body.calzadoAdecuado,
+      actividades_fisicas: req.body.actividadesRecomendadas,
+      restricciones_precauciones: req.body.restricciones
     });
 
-    const historiaId = historia.id;
-
-    // Crear registros relacionados
-    await Antecedentes.create({ ...datos, historiaClinicaId: historiaId });
-    await EvaluacionPostural.create({ ...datos, historiaClinicaId: historiaId });
-    await EvaluacionFuncional.create({ ...datos, historiaClinicaId: historiaId });
-    await FuerzaMuscular.create({ ...datos.tablaFuerzaMuscular, historiaClinicaId: historiaId });
-    await InformeFinal.create({ ...datos, historiaClinicaId: historiaId });
-
-    // Guardar seguimiento solo si tiene datos válidos
-    if (Array.isArray(datos.seguimiento)) {
-      const seguimientoValido = datos.seguimiento.filter(
-        seg => seg.fecha || seg.observaciones || seg.intervenciones
-      );
-
-      for (const seg of seguimientoValido) {
-        await Seguimiento.create({ ...seg, historiaClinicaId: historiaId });
-      }
-    }
-
-    await FirmasConsentimientos.create({
-      historiaClinicaId: historiaId,
-      seguimiento1Fecha: datos.seguimiento1Fecha,
-      seguimiento1Observaciones: datos.seguimiento1Observaciones,
-      seguimiento2Fecha: datos.seguimiento2Fecha,
-      seguimiento2Observaciones: datos.seguimiento2Observaciones,
-      nombreEvaluador: datos.nombreEvaluador,
-      firmaEvaluador: datos.firmaEvaluador,
-      nombreTutor: datos.nombreTutor,
-      firmaTutor: datos.firmaTutor,
-      nombrePaciente: datos.nombrePaciente,
-      edadPaciente: datos.edadPaciente
+    // Crear Evaluación Postural
+    await EvaluacionPostural.create({
+      id_historia: historia.id_historia,
+      cabeza_cuello: req.body.cabezaCuello,
+      hombros: req.body.hombros,
+      columna: req.body.columna,
+      pelvis: req.body.pelvis,
+      extremidades: req.body.extremidades,
+      arco_plantar: req.body.arcoPlantar
     });
 
-    return res.status(201).json({ mensaje: "Ficha creada correctamente." });
+    // Crear Fuerza Muscular
+    await FuerzaMuscular.create({
+      id_historia: historia.id_historia,
+      ...req.body.tablaFuerzaMuscular
+    });
+
+    // Crear Pruebas Funcionales
+    await PruebasFuncionales.create({
+      id_historia: historia.id_historia,
+      test_adams: req.body.testAdams,
+      test_jack: req.body.testJack,
+      otras_pruebas: req.body.otrasPruebas
+    });
+
+    // Crear Seguimiento 1
+    await Seguimiento.create({
+      id_historia: historia.id_historia,
+      numero: 1,
+      fecha: req.body.seguimiento1Fecha,
+      observaciones: req.body.seguimiento1Observaciones
+    });
+
+    res.status(201).json({ mensaje: 'Ficha clínica guardada correctamente' });
   } catch (error) {
-    console.error("Error al guardar la ficha completa:", error);
-    return res.status(500).json({ error: "Error al guardar la ficha." });
+    console.error('Error al guardar la ficha completa:', error);
+    res.status(500).json({ error: 'Error al guardar la ficha completa', detalles: error });
   }
 };
